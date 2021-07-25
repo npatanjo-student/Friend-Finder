@@ -2,7 +2,7 @@
 
 <!--
     AUTHORS: Nate Patanjo, Nick Marquis
-    FILE: home.html
+    FILE: index.html
     ASSIGNMENT: Final Project
     COURSE: CSc 337; Summer 2021
     PURPOSE: 
@@ -16,11 +16,31 @@
                 href="./css/style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src = "./js/client.js"></script>
-        <title></title>
+        <title>Home</title>
     </head>
 
     <body>
+        <div id="topNavigationBar">
+            <a id="homepageButton" href="./home.html" target="_self">Friend Finder</a>
+            <a id="messagesButton" onclick="userMessages();">Messages</a>
+            <a id="yourProfileButton" onclick="userProfile();">Your Profile</a>
+        </div>
 
+        <div id="homeLeft">
+            <a id="messageMatchButton" onclick="messageMatch();">Message</a>
+            <a id="skipProfileButton" onclick="skipProfile();">Skip Profile</a>
+            <div id="matchBio"></div>
+        </div>
+
+        <div id="homeRight">
+            <div id="matchImage"></div>
+
+            <div id="matchInfo">
+                <div id="matchName"></div>
+                <div id="matchAge"></div>
+                <div id="matchLocation"></div>
+            </div>
+        </div>
     </body>
 
 </html>

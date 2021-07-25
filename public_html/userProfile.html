@@ -2,7 +2,7 @@
 
 <!--
     AUTHORS: Nate Patanjo, Nick Marquis
-    FILE: userProfile.html
+    FILE: index.html
     ASSIGNMENT: Final Project
     COURSE: CSc 337; Summer 2021
     PURPOSE: 
@@ -16,11 +16,30 @@
                 href="./css/style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src = "./js/client.js"></script>
-        <title></title>
+        <title id="userProfileTitle">User Profile</title>
     </head>
 
     <body>
+        <div id="topNavigationBar">
+            <a id="homepageButton" href="./home.html" target="_self">Friend Finder</a>
+            <a id="messagesButton" onclick="userMessages();">Messages</a>
+            <a id="yourProfileButton" onclick="userProfile();">Your Profile</a>
+        </div>
 
+        <div id="profileLeft">
+            <a id="editProfileButton" onclick="editProfile();">Edit Profile</a>
+            <div id="userBio"></div>
+        </div>
+
+        <div id="profileRight">
+            <div id="userImage"></div>
+
+            <div id="userInfo">
+                <div id="userName"></div>
+                <div id="userAge"></div>
+                <div id="userLocation"></div>
+            </div>
+        </div>
     </body>
 
 </html>

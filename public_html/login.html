@@ -2,7 +2,7 @@
 
 <!--
     AUTHORS: Nate Patanjo, Nick Marquis
-    FILE: login.html
+    FILE: index.html
     ASSIGNMENT: Final Project
     COURSE: CSc 337; Summer 2021
     PURPOSE: 
@@ -16,11 +16,20 @@
                 href="./css/style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src = "./js/client.js"></script>
-        <title></title>
+        <title>Log In</title>
     </head>
 
     <body>
-
+        <div>
+            <a id="createAccountPageButton" href="./index.html" target="_self">Create Account</a>
+        </div>
+        <h3>Log In to</h3>
+        <h1>Friend Finder</h1>
+        <div>
+            <input id="loginUsername" type="text" placeholder="Username">
+            <input id="loginPassword" type="password" placeholder="Password">
+            <a id="createAccount" onclick="login();">Log In</a>
+        </div>
     </body>
 
 </html>

@@ -16,7 +16,7 @@
                 href="./css/style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src = "./js/client.js"></script>
-        <title>Messages</title>
+        <title id="friendProfileTitle">Friend Profile</title>
     </head>
 
     <body>
@@ -26,12 +26,20 @@
             <a id="yourProfileButton" onclick="userProfile();">Your Profile</a>
         </div>
 
-        <div id="messagesLeft">
-            <div id="conversations"></div>
+        <div id="profileLeft">
+            <a id="messageFriendButton" onclick="messageFriend();">Message</a>
+            <a id="deleteFriendButton" onclick="deleteFriend();">Delete Friend</a>
+            <div id="friendBio"></div>
         </div>
 
-        <div id="messagesRight">
-            <div id="currentChat">No chat selected</div>
+        <div id="profileRight">
+            <div id="friendImage"></div>
+
+            <div id="friendInfo">
+                <div id="friendName"></div>
+                <div id="friendAge"></div>
+                <div id="friendLocation"></div>
+            </div>
         </div>
     </body>
 
