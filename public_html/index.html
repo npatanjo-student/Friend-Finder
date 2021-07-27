@@ -20,16 +20,22 @@
     </head>
 
     <body onload="checkLogin();">
-        <div>
+        <div id="headerContainer">
+          <h1>Friend Finder</h1>
+        </div>
+        <div id="pageButtonContainer">
             <a id="loginPageButton" href="./login.html" target="_self">Log In</a>
         </div>
-        <h3>Sign Up for</h3>
-        <h1>Friend Finder</h1>
-        <div>
-            <input id="signupFullName" type="text" placeholder="Full Name">
-            <input id="signupUsername" type="text" placeholder="Username">
-            <input id="signupPassword" type="password" placeholder="Password">
-            <a id="createAccount" onclick="createAccount();">Create Account</a>
+        <br>
+        <div id="inputContainer">
+          <h3>Sign Up</h3>
+          <input id="signupFullName" type="text" placeholder="Full Name"> <br><br>
+          <input id="signupUsername" type="text" placeholder="Username"> <br><br>
+          <input id="signupPassword" type="password" placeholder="Password"> <br><br>
+          <a id="createAccount" onclick="createAccount();">Create Account</a>
+        </div>
+        <div id="imgContainer">
+          <img src="" alt="login image not found">
         </div>
     </body>
 
