@@ -13,22 +13,26 @@
         <meta charset="utf-8"/>
         <link rel="stylesheet"
                 type="text/css"
-                href="./css/style.css">
+                href="./css/styleHome.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src = "./js/client.js"></script>
         <title>Home</title>
     </head>
 
     <body>
-        <div id="topNavigationBar">
+        <div id="title">
             <a id="homepageButton" href="./home.html" target="_self">Friend Finder</a>
+        </div>
+        <div id="topNavigationBar">
             <a id="messagesButton" onclick="userMessages();">Messages</a>
             <a id="yourProfileButton" onclick="userProfile();">Your Profile</a>
         </div>
 
         <div id="homeLeft">
-            <a id="messageMatchButton" onclick="messageMatch();">Message</a>
-            <a id="skipProfileButton" onclick="skipProfile();">Skip Profile</a>
+            <div id="homeLeftOptions">
+                <a id="messageMatchButton" onclick="messageMatch();">Message</a>
+                <a id="skipProfileButton" onclick="skipProfile();">Skip Profile</a>
+            </div>
             <div id="matchBio"></div>
         </div>
 
