@@ -20,11 +20,54 @@
   }
 }
 
+#homeLeft {
+    position: absolute;
+    top: 100px;
+    border-right: 3px solid lightgray;
+    height: 80%;
+    width: 30%;
+}
+
+#homeLeftOptions {
+    text-align: center;
+}
+
+#messageMatchButton {
+    margin-right: 40px;
+    font-family: sans-serif;
+    font-weight: 100;
+    border: 5px solid rgb(100, 210, 255);
+    color: white;
+    background-color: rgb(100, 210, 255);
+    border-radius: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#skipProfileButton {
+    font-family: sans-serif;
+    font-weight: 100;
+    border: 5px solid darkgray;
+    color: white;
+    background-color: darkgray;
+    border-radius: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+
+}
+
+#homeRight {
+    position: absolute;
+    top: 100px;
+    left: 33%;
+    width: 65%;
+    height: 80%;
+}
+
 #homepageButton {
     text-decoration: none;
     background: radial-gradient(circle, #F58529 0%, #DD2A7B 40%,
         #8134AF 60%, #515BD4 100%);
-
     font-family: sans-serif;
     font-weight: 100;
     letter-spacing: 0.5rem;
