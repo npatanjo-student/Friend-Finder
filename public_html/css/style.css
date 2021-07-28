@@ -13,7 +13,6 @@ body {
 
 #pageButtonContainer {
   top: 2rem;
-  border: 2px solid magenta;
   left: 80%;
   display: inline-block;
   width: 20%;
@@ -25,7 +24,16 @@ body {
 }
 
 #loginPageButton {
+  font-size: 25px;
+  font-family: sans-serif;
+  font-weight: 100;
+  border: 5px solid rgb(100, 210, 255);
+  color: white;
+  background-color: rgb(100, 210, 255);
+  border-radius: 15px;
   margin-top: 50px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 #title {
@@ -64,19 +72,42 @@ body {
   display: inline-block;
   position: absolute;
   left: 0px;
-  top: 140px;
-  width: 50%;
-  height: 100%;
+  top: 150px;
+  width: 49%;
+  height: 60%;
   background-color: #FAF9F6;
   margin-left: 10px;
+  padding-left: 20px;
+  padding-top: 40px;
 }
 
 #imgContainer {
   display: inline-block;
   position: absolute;
-  left: 50%;
-  top: 140px;
-  width: 50%;
-  height: 100%;
+  left: 30%;
+  width: 49%;
+  height: 60%;
+  top: 150px;
   background-color: #FAF9F6;
+  padding-top: 40px;
+}
+
+.textBox {
+  font-size: 15px;
+  border: 5px solid rgb(100, 210, 255);
+  color: white;
+  background-color: rgb(100, 210, 255);
+  border-radius: 15px;
+}
+
+#signUp {
+  font-family: sans-serif;
+  font-weight: 100;
+  letter-spacing: 0.5rem; 
+  font-size: 30px;
+}
+
+img {
+  top: 40px;
+  width: 700px;
 }
