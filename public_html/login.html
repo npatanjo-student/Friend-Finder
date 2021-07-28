@@ -20,15 +20,18 @@
     </head>
 
     <body>
-        <div>
+        <div id="pageButtonContainer">
             <a id="createAccountPageButton" href="./index.html" target="_self">Create Account</a>
         </div>
-        <h3>Log In to</h3>
-        <h1>Friend Finder</h1>
-        <div>
-            <input id="loginUsername" type="text" placeholder="Username">
-            <input id="loginPassword" type="password" placeholder="Password">
+        <h1 id="title">Friend Finder</h1>
+        <div id="inputContainer">
+            <h3 id="inputPrompt">Log In</h3><br>
+            <input class="textBox" id="loginUsername" type="text" placeholder="Username"><br><br>
+            <input class="textBox" id="loginPassword" type="password" placeholder="Password"><br><br><br>
             <a id="createAccount" onclick="login();">Log In</a>
+        </div>
+        <div id="imgContainer">
+          <img src="img/signupImg.jpg" alt="login image not found">
         </div>
     </body>
 
