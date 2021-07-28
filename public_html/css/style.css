@@ -24,7 +24,20 @@ body {
 }
 
 #loginPageButton {
-  font-size: 25px;
+  font-size: 20px;
+  font-family: sans-serif;
+  font-weight: 100;
+  border: 5px solid rgb(100, 210, 255);
+  color: white;
+  background-color: rgb(100, 210, 255);
+  border-radius: 15px;
+  margin-top: 50px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#createAccountPageButton {
+  font-size: 20px;
   font-family: sans-serif;
   font-weight: 100;
   border: 5px solid rgb(100, 210, 255);
@@ -100,7 +113,7 @@ body {
   border-radius: 15px;
 }
 
-#signUp {
+#inputPrompt {
   font-family: sans-serif;
   font-weight: 100;
   letter-spacing: 0.5rem; 
