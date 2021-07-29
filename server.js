@@ -20,12 +20,17 @@ app.use(cookieParser());
 const db = mongoose.connection;
 const mongoDBURL = 'mongodb://localhost/auto';
 
-app.use(express.static('public_html'))
+app.use("/", express.static('public_html'))
 
 mongoose.connect(mongoDBURL , { useNewUrlParser: true });
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-const port = 3000;
-app.listen(port, () => {
+app.post("add/user", (req, res) => {
+    let userObj = JSON.parse(req.body.user);
+    var user = new Users(userObj);
+    user.save(function(err) {if (err) console.log("an error occurred");});
+});
+
+app.listen(3000, () => {
     console.log('server has started');
 });
