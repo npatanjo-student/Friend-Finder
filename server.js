@@ -5,6 +5,8 @@
     COURSE: CSc 337; Summer 2021
     PURPOSE: 
 */
+import {Users, Messages, Interests} from "./objectBank.js"; // import already created schemas
+
 const express = require('express');
 const mongoose = require('mongoose');
 const parser = require('body-parser');
@@ -27,5 +29,3 @@ const port = 3000;
 app.listen(port, () => {
     console.log('server has started');
 });
-
-var Schema = mongoose.Schema;
