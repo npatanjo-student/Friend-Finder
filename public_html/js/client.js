@@ -15,3 +15,21 @@ function update() {
         }
     });
 }
+
+function createAccount() {
+    let u = $("#signupUsername").val();
+    let p = $("#signupPassword").val();
+    let n = $("#signupFullName").val();
+    let user = {
+        username: u,
+        password: p,
+        fullName: n
+    }
+    let userStr = JSON.stringify(user);
+    $.ajax({
+        url: "/add/user",
+        data: {user: userStr},
+        method: "POST",
+        success: function (result) {alert("User added");}
+    });
+}
