@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
+const db = mongoose.createConnection("localhost", "test");
+
 var Schema = mongoose.Schema;
 
-var UsersSchema = new Schema ({
+var UserSchema = new Schema ({
     username : String,
     password : String, 
     fullName : String,
@@ -9,8 +11,8 @@ var UsersSchema = new Schema ({
     age : Number,
     location : String,
     bio : String,
-    interests : [],
-    messages : []
+    interests : [{type: Schema.ObjectId, ref: "Interests"}],
+    messages : [{type: Schema.ObjectId, ref: "Messages"}]
 });
 
 var MessagesSchema = new Schema ({
@@ -24,8 +26,8 @@ var InterestsSchema = new Schema ({
     weight: Number
 });
 
-var Users = mongoose.model("Users", UsersSchema);
+var User = mongoose.model("User", UserSchema);
 var Messages = mongoose.model("Messages", MessagesSchema);
 var Interests = mongoose.model("Interests", InterestsSchema);
 
-export {Users, Messages, Interests};
+module.exports = User, Messages, Interests;
