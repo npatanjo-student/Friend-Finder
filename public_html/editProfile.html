@@ -13,11 +13,7 @@
         <meta charset="utf-8"/>
         <link rel="stylesheet"
                 type="text/css"
-<<<<<<< HEAD
-                href="./css/styleProfile.css">
-=======
                 href="./css/styleEdit.css">
->>>>>>> 67e1045e132afd738e2050fe718e91c9c9cc3989
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src = "./js/client.js"></script>
         <title>Edit Profile</title>
@@ -34,15 +30,20 @@
 
         <div id="profileLeft">
             <a id="saveProfileButton" onclick="saveProfile();">Save Profile</a>
+            <label for="editUserBio">Bio</label>
             <textarea class="textBox" rows="12" cols="24" id="editUserBio" value=""></textarea>
         </div>
 
         <div id="profileRight">
+            <label for="editUserImage">Edit Image</label>
             <input id="editUserImage" value="">
 
             <div id="editUserInfo">
+                <label for="editUserName">Edit Username</label>
                 <input id="editUserName" type="text" value="">
+                <label for="editUserAge">Edit Age</label>
                 <input id="editUserAge" type="text" value="">
+                <label for="editUserLocation">Edit Location</label>
                 <input id="editUserLocation" type="text" value="">
             </div>
         </div>

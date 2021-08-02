@@ -33,3 +33,22 @@ function createAccount() {
         success: function (result) {alert("User added");}
     });
 }
+
+function login() {
+    let u = $("#loginUsername").val();
+    let p = $("#loginPassword").val();
+    $.ajax ({
+      url: "/login/" + u + "/" + p,
+      method: "GET",
+      success: function (result) {
+        if (result == "BAD") {
+          alert(result);
+        } else {
+          let url = "/home.html";
+          window.location = url;
+        }
+      }
+    });
+  }
+
+
