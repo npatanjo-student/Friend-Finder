@@ -36,15 +36,12 @@
     margin-right: 40px;
     font-family: sans-serif;
     font-weight: 100;
-<<<<<<< HEAD
     border: 5px solid darkgray;
     color: white;
     background-color: darkgray;
-=======
     border: 5px solid rgb(100, 210, 255);
     color: white;
     background-color: rgb(100, 210, 255);
->>>>>>> 67e1045e132afd738e2050fe718e91c9c9cc3989
     border-radius: 3px;
     padding-left: 5px;
     padding-right: 5px;
@@ -62,14 +59,11 @@
 
 }
 
-<<<<<<< HEAD
 #messageMatchButton:hover, #skipProfileButton:hover {
     border: 5px solid rgb(100, 210, 255);
     background-color: rgb(100, 210, 255);
 }
 
-=======
->>>>>>> 67e1045e132afd738e2050fe718e91c9c9cc3989
 #homeRight {
     position: absolute;
     top: 100px;

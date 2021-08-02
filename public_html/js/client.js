@@ -51,4 +51,16 @@ function login() {
     });
   }
 
+function userProfile() {
+    window.location = "/userProfile.html"
+}
+
+function userMessages() {
+    window.location = "/messages.html"
+}
+
+function editProfile() {
+    window.location = "/editProfile.html"
+}
+
 

@@ -49,6 +49,8 @@ var Messages = mongoose.model("Messages", MessagesSchema);
 var Interests = mongoose.model("Interests", InterestsSchema);
 var sessionKeys = {};
 
+app.use("/home.html", authentication);
+app.use("/userProfile.html", authentication);
 app.use("/", express.static('public_html'))
 
 mongoose.connect(mongoDBURL , { useNewUrlParser: true });
