@@ -1,3 +1,5 @@
+const { profile } = require("console");
+
 /*
     AUTHORS: Nate Patanjo, Nick Marquis
     FILE: client.js
@@ -50,6 +52,21 @@ function login() {
       }
     });
   }
+
+function saveProfile() {
+    let bio = $("editUserBio").val();
+    let img = $("editUserImage").val();
+    let u = $("editUserName").val();
+    let age = $("editUserAge").val();
+    let loc = $("editUserLocation").val();
+    $.ajax ({
+        url: "/save/" + bio + "/" + img + "/" + u + "/" + age + "/" + loc,
+        method: "GET",
+        success: function (result) {
+            alert("profile updated");
+        }
+    });
+}
 
 function userProfile() {
     window.location = "/userProfile.html"

@@ -111,6 +111,11 @@ app.get("/login/:u/:p", (req, res) => {
   });
 });
 
+app.get("/save/:bio/:img/:u/:age/:loc", (req, res) => {
+  //TODO: make interest objects and add them to user 
+  // using cookies. 
+});
+
 app.listen(3000, () => {
     console.log('server has started');
 });
