@@ -29,7 +29,7 @@ var UserSchema = new Schema ({
     age : Number,
     location : String,
     bio : String,
-    interests : [{type: Schema.ObjectId, ref: "Interests"}],
+    interests : [],
     messages : [{type: Schema.ObjectId, ref: "Messages"}]
 });
 
@@ -39,10 +39,10 @@ var MessagesSchema = new Schema ({
     time : String
 });
 
-var InterestsSchema = new Schema ({
-    interest : String,
-    weight: Number
-});
+// var InterestsSchema = new Schema ({
+//     interest : String,
+//     weight: Number
+// });
 
 var User = mongoose.model("User", UserSchema);
 var Messages = mongoose.model("Messages", MessagesSchema);
