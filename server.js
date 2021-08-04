@@ -111,8 +111,12 @@ app.get("/login/:u/:p", (req, res) => {
 });
 
 app.get("/save/:bio/:img/:u/:age/:loc", (req, res) => {
-  //TODO: make interest objects and add them to user 
-  // using cookies. 
+  User.find({username: req.cookies.login.username}).exec(function(error, results) {
+    if (req.params.age != null) { results.interests.push(req.params.loc); } // might need to change null to undefined
+    if (req.params.loc != null) { results.interests.push(req.params.age); }
+    if (req.params.bio != null) { results.interests.push(req.params.bio); }
+    req.params.img == null ? results.img = "" : results.img = req.params.img;
+  });
 });
 
 app.get("/messages", (req, res) => {
