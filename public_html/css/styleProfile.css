@@ -7,7 +7,7 @@
 */
 
 #title {
-    display: inline-block;
+  display: inline-block;
 }
 
 @keyframes gradiant {
@@ -20,29 +20,127 @@
 }
 
 #homepageButton {
-    text-decoration: none;
-    background: radial-gradient(circle, #F58529 0%, #DD2A7B 40%,
-        #8134AF 60%, #515BD4 100%);
-    font-family: sans-serif;
-    font-weight: 100;
-    letter-spacing: 0.5rem;
-    font-size: 2rem;
-    padding: 10px;
-    -webkit-background-clip: text;
-    color: transparent;
-    background-size: 200%;
-    animation: gradiant 5s linear infinite alternate;
+  text-decoration: none;
+  background: radial-gradient(circle, #F58529 0%, #DD2A7B 40%,
+      #8134AF 60%, #515BD4 100%);
+  font-family: sans-serif;
+  font-weight: 100;
+  letter-spacing: 0.5rem;
+  font-size: 2rem;
+  padding: 10px;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-size: 200%;
+  animation: gradiant 5s linear infinite alternate;
 }
 
 #topNavigationBar {
-    padding-top: 10px; 
-    margin-right: 25px;
-    display: inline-block;
-    float: right;
-    font-family: sans-serif;
-    font-weight: 100;
+  padding-top: 10px; 
+  margin-right: 25px;
+  display: inline-block;
+  float: right;
+  font-family: sans-serif;
+  font-weight: 100;
 }
 
 #messagesButton {
     margin-right: 25px;
+}
+
+#userInfo {
+  margin-top: 30px;
+  text-align: center;
+}
+
+#userName, #userAge {
+  display: inline-block;
+  font-family: sans-serif;
+  font-weight: 100;
+  margin: 5px;
+}
+
+#editUserInfo {
+  font-family: sans-serif;
+  font-weight: 100;
+  margin-top: 30px;
+  text-align: center;
+}
+
+#editUserName, #editUserAge {
+  display: inline-block;
+  font-family: sans-serif;
+  font-weight: 100;
+  margin: 5px;
+}
+
+#userName {
+  font-size: 2.3rem;
+}
+
+#userAge {
+  font-size: 1.2rem;
+}
+
+#userLocation {
+  font-family: sans-serif;
+  font-weight: 100;
+  letter-spacing: 0.2rem;
+}
+
+#profileLeft {
+  position: absolute;
+  top: 170px;
+  border-right: 3px solid lightgray;
+  height: 70%;
+  width: 30%;
+  text-align: center;
+}
+
+#profileRight {
+  position: absolute;
+  top: 170px;
+  left: 33%;
+  width: 65%;
+  height: 70%;
+  font-family: sans-serif;
+  font-weight: 100;
+}
+
+#userBio {
+  font-family: sans-serif;
+  font-weight: 100;
+  position: relative;
+  margin-top: 50px;
+  line-height: 30px;
+}
+
+#editUserBio {
+  font-family: sans-serif;
+  font-weight: 100;
+  position: relative;
+  margin-top: 50px;
+  line-height: 30px;
+}
+
+#editProfileButton {
+  font-family: sans-serif;
+  font-weight: 100;
+  border: 5px solid darkgray;
+  color: white;
+  background-color: darkgray;
+  border-radius: 3px;
+}
+
+#saveProfileButton {
+  font-family: sans-serif;
+  font-weight: 100;
+  border: 5px solid darkgray;
+  color: white;
+  background-color: darkgray;
+  border-radius: 3px;
+}
+
+#editProfileButton:hover, #saveProfileButton:hover {
+  border: 5px solid rgb(100, 210, 255);
+  background-color: rgb(100, 210, 255);
 }
