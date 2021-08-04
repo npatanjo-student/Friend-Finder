@@ -84,7 +84,7 @@ function viewConvos() {
     });
 }
 
-function displayMessages(data) {
+function displayMessages(data,username) {
     var toReturn = '';
     for (message in data) {
         if (message.substring(0,3) == "to:") {
@@ -93,6 +93,8 @@ function displayMessages(data) {
             toReturn += '<div class="messageFrom">' + message.substring(3) + '</div>';
         }
     }
+    toReturn += '<textarea class="textBox" rows="12" cols="24" id="messageEntry" value="" placeholder="Start a new message"></textarea>';
+    toReturn += '<a id="sendMessageButton" onclick="sendMessage('+username+');">Send</a>';
     return toReturn;
 }
 
@@ -102,7 +104,7 @@ function viewMessages(convoID) {
         url: "/messages/" + convoID,
         method: "GET",
         success: function (result) {
-            let results = displayMessages(result);
+            let results = displayMessages(result,convoID);
             $('#currentChat').html(results);
         }
     });
