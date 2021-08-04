@@ -10,6 +10,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const parser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const crypto = require ("crypto");
 
 const app = express();
 app.use(parser.json());
@@ -18,12 +19,14 @@ app.use(cookieParser());
 
 const db = mongoose.connection;
 const mongoDBURL = 'mongodb://localhost/auto';
+const iterations = 1000;
 
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema ({
     username : String,
-    password : String, 
+    salt : String, 
+    hash: String,
     fullName : String,
     photo : String,
     age : Number,
@@ -82,11 +85,27 @@ function authentication(req, res, next) {
     }
   }
 
-app.post("/add/user", (req, res) => {
-    let userObj = JSON.parse(req.body.user);
-    var user = new User(userObj);
-    user.save(function(err) {if (err) console.log("an error occurred");});
-    console.log("New User Created");
+app.get("/add/user/:u/:p/:n", (req, res) => {
+  User.find ({username: req.params.u}).exec(function(error, results) {
+    if (results.length == 0) {
+      var salt = crypto.randomBytes(64).toString("base64");
+      crypto.pbkdf2(req.params.p, salt, iterations, 64, "sha512", (err, hash) => {
+        if (err) throw err;
+        let res = {salt: salt, hash: hash.toString("base64"), iterations: iterations };
+        let hashStr = hash.toString("base64");
+        console.log(res);
+        var user = new User({
+          "username" : req.params.u,
+          "salt" : salt,
+          "hash" : hashStr,
+          "fullName" : req.params.n
+        });
+        user.save(function (err) {if (err) console.log("an error occured");});
+      });
+    } else {
+      res.send("Username is already in use.")
+    }
+  });
 });
 
 app.get("/get/users/", (req, res) => {
@@ -97,13 +116,21 @@ app.get("/get/users/", (req, res) => {
   });
 
 app.get("/login/:u/:p", (req, res) => {
-  User.find({username: req.params.u, password: req.params.p}).exec(function(error,results) {
+  User.find({username: req.params.u}).exec(function(error, results) {
     if (results.length == 1) {
-      let sessionKey = Math.floor(Math.random() * 1000);
-      sessionKeys[req.params.u] = sessionKey;
-      sessionKeys[req.params.u] = [sessionKey, Date.now()];
-      res.cookie("login", {username: req.params.u, key: sessionKey}, {maxAge: 60000}); // make 60000
-      res.send("logged in");
+      var salt = results[0].salt;
+      crypto.pbkdf2(req.params.p, salt, iterations, 64, "sha512", (err, hash) => {
+        if (err) throw err;
+        let hashStr = hash.toString("base64");
+        if (results[0].hash == hashStr) {
+          let sessionKey = Math.floor(Math.random() * 1000);
+          sessionKeys[req.params.u] = [sessionKey, Date.now()];
+          res.cookie("login", {username: req.params.u, key: sessionKey}, {maxAge: 60000});
+          res.send("logged in");
+        } else {
+          res.send("Please Try Again");
+        } 
+      });
     } else {
       res.send("BAD");
     }

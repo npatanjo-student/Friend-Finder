@@ -1,5 +1,3 @@
-const { profile } = require("console");
-
 /*
     AUTHORS: Nate Patanjo, Nick Marquis
     FILE: client.js
@@ -22,16 +20,9 @@ function createAccount() {
     let u = $("#signupUsername").val();
     let p = $("#signupPassword").val();
     let n = $("#signupFullName").val();
-    let user = {
-        username: u,
-        password: p,
-        fullName: n
-    }
-    let userStr = JSON.stringify(user);
     $.ajax({
-        url: "/add/user",
-        data: {user: userStr},
-        method: "POST",
+        url: "/add/user/" + u + "/" + p + "/" + n,
+        method: "GET",
         success: function (result) {alert("User added");}
     });
 }
