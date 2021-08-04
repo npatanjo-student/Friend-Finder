@@ -37,9 +37,9 @@ var UserSchema = new Schema ({
 });
 
 var MessagesSchema = new Schema ({
-    userID : [{type: Schema.ObjectId, ref: "User"}],
+    toID : String,
+    fromID : String,
     messages : String,
-    time : String
 });
 
 // var InterestsSchema = new Schema ({
@@ -146,28 +146,84 @@ app.get("/save/:bio/:img/:u/:age/:loc", (req, res) => {
   });
 });
 
-app.get("/messages", (req, res) => {
+app.get("/messages/", (req, res) => {
   if (authentication != "NOT ALLOWED") {
+    let convoDict = new Set();
     let curUser = req.cookies.login.username;
     User.find({username: curUser})
+    .populate("messages")
     .exec(function(error,results) {
-      let userMessages = results[0].messages;
-      res.send(userMessages);
+      for (message_obj in results[0].messages) {
+        User.find({username: message_obj.toID})
+        .exec(function(error,results) {
+          convoDict[results[0].username]=results[0].fullName;
+        });
+      }
+      res.send(convoDict);
     });
+  } else {
+    res.send('NOT ALLOWED');
   }
 });
 
-app.post("/messages/send", (req, res) => {
-  let newMessage = JSON.parse(req.body.newMessage);
+app.get("/messages/:convo", (req, res) => {
+  if (authentication != "NOT ALLOWED") {
+    let messageList = [];
+    let curUser = req.cookies.login.username;
+    User.find({username: curUser})
+    .populate("messages")
+    .exec(function(error,results) {
+      for (message_obj in results[0].messages) {
+        if (message_obj.toID == req.params.convo) {
+          let userMessage = 'to:' + message_obj.messages;
+          messageList.push(userMessage);
+        } else if (message_obj.fromID == req.params.convo) {
+          let userMessage = 'fr:' + message_obj.messages;
+          messageList.push(userMessage);
+        }
+      }
+      res.send(messageList);
+    });
+  } else {
+    res.send('NOT ALLOWED');
+  }
+});
+
+app.post("/messages/:convo/send", (req, res) => {
   if (authentication != "NOT ALLOWED") {
     let curUser = req.cookies.login.username;
     
+    let message = JSON.parse(req.body.message);
+
+    var messageObj = new Messages(message);
+
+    messageObj.fromID = curUser;
+
+    messageObj.save(function (err) { if (err) console.log('could not save message'); });
+
     User.find({username: curUser})
     .exec(function(error,results) {
-      let userMessages = results[0].messages;
-      userMessages.push(newMessage);
-      res.send("Sent");
+      try {
+        let userMessages = results[0].messages;
+        userMessages.push(message);
+      } catch {
+        res.send(error);
+      }
     });
+
+    User.find({username: req.params.convo})
+    .exec(function(error,results) {
+      try {
+        let userMessages = results[0].messages;
+        userMessages.push(message);
+      } catch {
+        res.send(error);
+      }
+      
+    });
+    res.send("Message Sent");
+  } else {
+    res.send('NOT ALLOWED');
   }
 });
 
