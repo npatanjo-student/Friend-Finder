@@ -66,6 +66,7 @@ body {
   font-size: 3rem;
   padding: 10px;
   -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
   background-size: 200%;
   animation: gradiant 5s linear infinite alternate;

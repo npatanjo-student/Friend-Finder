@@ -7,16 +7,6 @@ const { profile } = require("console");
     COURSE: CSc 337; Summer 2021
     PURPOSE: 
 */
-function update() {
-    $.ajax({
-        url: '/some/path',
-        data: { name: 'Joe' },
-        method: 'GET',
-        success: function( result ) {
-            alert(result);
-        }
-    });
-}
 
 function createAccount() {
     let u = $("#signupUsername").val();
@@ -61,7 +51,7 @@ function saveProfile() {
     let loc = $("editUserLocation").val();
     $.ajax ({
         url: "/save/" + bio + "/" + img + "/" + u + "/" + age + "/" + loc,
-        method: "GET",
+        method: "POST",
         success: function (result) {
             alert("profile updated");
         }
@@ -73,7 +63,29 @@ function userProfile() {
 }
 
 function userMessages() {
-    window.location = "/messages.html"
+    $.ajax({
+        url: "/messages",
+        method: "GET",
+        success: function (result) {
+            var toReturn = "";
+            for (message in result) {
+                message.messages;
+            }
+        }
+    });
+}
+
+function sendMessage() {
+    let m = $("#messageTextBox").val();
+    let u = 
+    $.ajax({
+        url: "/messages/send",
+        data : {newMessage: message},
+        method: "POST",
+        success: function (result) {
+            alert("message Sent");
+        }
+    });
 }
 
 function editProfile() {

@@ -34,7 +34,7 @@ var UserSchema = new Schema ({
 });
 
 var MessagesSchema = new Schema ({
-    userID : [],
+    userID : [{type: Schema.ObjectId, ref: "User"}],
     messages : String,
     time : String
 });
@@ -46,7 +46,7 @@ var MessagesSchema = new Schema ({
 
 var User = mongoose.model("User", UserSchema);
 var Messages = mongoose.model("Messages", MessagesSchema);
-var Interests = mongoose.model("Interests", InterestsSchema);
+// var Interests = mongoose.model("Interests", InterestsSchema);
 var sessionKeys = {};
 
 app.use("/home.html", authentication);
@@ -86,12 +86,11 @@ app.post("/add/user", (req, res) => {
     let userObj = JSON.parse(req.body.user);
     var user = new User(userObj);
     user.save(function(err) {if (err) console.log("an error occurred");});
-    console.log("worked");
+    console.log("New User Created");
 });
 
 app.get("/get/users/", (req, res) => {
     User.find({})
-    .populate("mfg")
     .exec(function(error, results) {
       res.send(JSON.stringify(results, null, 2));
     });
@@ -114,6 +113,31 @@ app.get("/login/:u/:p", (req, res) => {
 app.get("/save/:bio/:img/:u/:age/:loc", (req, res) => {
   //TODO: make interest objects and add them to user 
   // using cookies. 
+});
+
+app.get("/messages", (req, res) => {
+  if (authentication != "NOT ALLOWED") {
+    let curUser = req.cookies.login.username;
+    User.find({username: curUser})
+    .exec(function(error,results) {
+      let userMessages = results[0].messages;
+      res.send(userMessages);
+    });
+  }
+});
+
+app.post("/messages/send", (req, res) => {
+  let newMessage = JSON.parse(req.body.newMessage);
+  if (authentication != "NOT ALLOWED") {
+    let curUser = req.cookies.login.username;
+    
+    User.find({username: curUser})
+    .exec(function(error,results) {
+      let userMessages = results[0].messages;
+      userMessages.push(newMessage);
+      res.send("Sent");
+    });
+  }
 });
 
 app.listen(3000, () => {
