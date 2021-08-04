@@ -63,3 +63,42 @@
 #messagesButton {
     margin-right: 25px;
 }
+
+.convoTabs {
+    text-align: center;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    display: inline-block;
+    font-family: sans-serif;
+    font-weight: 100;
+    border-bottom: 3px solid lightgray;
+    height: 16%;
+    width: 95%;
+    font-size: 30px;
+}
+
+.messageTo {
+    text-align: left;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    display: inline-block;
+    font-family: sans-serif;
+    font-weight: 100;
+    border-bottom: 3px solid lightgray;
+    height: 16%;
+    width: 95%;
+    font-size: 20px;
+}
+
+.messageFrom {
+    text-align: right;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    display: inline-block;
+    font-family: sans-serif;
+    font-weight: 100;
+    border-bottom: 3px solid lightgray;
+    height: 16%;
+    width: 95%;
+    font-size: 20px;
+}

@@ -68,7 +68,7 @@ function displayConvoTabs(data) {
     for (key in data) {
         var username = key;
         var fullName = data[key];
-        toReturn += '<a class="convoTabs" onclick="viewMessages('+username+');">'+ fullName +'</a>';
+        toReturn += '<a class="convoTabs" id="'+username+'" onclick="viewMessages('+username+');">'+ fullName +'</a>';
     }    
     return toReturn;
 }
@@ -99,6 +99,10 @@ function displayMessages(data,username) {
 }
 
 function viewMessages(convoID) {
+    $('.convoTabs').css('background-color','#ffffff');
+    $('.convoTabs').css('width','95%');
+    $(convoID).css('background-color','#lightgray');
+    $(convoID).css('width','100%');
 
     $.ajax ({
         url: "/messages/" + convoID,
@@ -129,5 +133,3 @@ function sendMessage(convoID) {
 function editProfile() {
     window.location = "/editProfile.html"
 }
-
-

@@ -19,7 +19,7 @@
         <title>Messages</title>
     </head>
 
-    <body>
+    <body onload = "viewConvos();">
         <div id="title">
             <a id="homepageButton" href="./home.html" target="_self">Friend Finder</a>
         </div>
@@ -29,7 +29,10 @@
         </div>
 
         <div id="messagesLeft">
-            <div id="conversations"></div>
+            <div id="conversations">
+                <a class="convoTabs" id="username" onclick="viewMessages('username');"> Example Convo </a>
+                <a class="convoTabs" id="username" onclick="viewMessages('username');"> Example Convo </a>
+            </div>
         </div>
 
         <div id="messagesRight">
