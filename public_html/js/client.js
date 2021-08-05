@@ -44,7 +44,7 @@ function login() {
     });
   }
 
-function saveProfile() {
+function saveProfileEdits() {
     let interestsList = [];
     let bio = $("editUserBio").val();
     let img = $("editUserImage").val();
@@ -65,7 +65,6 @@ function saveProfile() {
         let interest_str = JSON.stringify(interest_JSON);
         interestsList.push(interest_str);
     }
-
     $.ajax ({
         url: "/save/",
         data: {bio : bio,
@@ -81,12 +80,38 @@ function saveProfile() {
     });
 }
 
+function showEditProfile() {
+    $.ajax ({
+        url: "/profile/",
+        method: "GET",
+        success: function (result) {
+            $('#editUserName').val(result['fullName']);
+            $('#editUserImage').val(result['photo']);
+            $('#editUserAge').val(result['age']);
+            $('#editUserLocation').val(result['location']);
+            $('#editUserBio').val(result['bio']);
+            $('#editUserInterests').val(result['interests']);
+        }
+    });
+}
+
 function userProfile() {
     window.location = "/userProfile.html"
 }
 
 function showUserProfile() {
-    window.location = "/userProfile.html"
+    $.ajax ({
+        url: "/profile/",
+        method: "GET",
+        success: function (result) {
+            $('#userName').text(result['fullName']);
+            $('#userImage').text(result['photo']);
+            $('#userAge').text(result['age']);
+            $('#userLocation').text(result['location']);
+            $('#userBio').text(result['bio']);
+            $('#userInterests').text(result['interests']);
+        }
+    });
 }
 
 function displayConvoTabs(data) {

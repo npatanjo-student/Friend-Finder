@@ -19,7 +19,7 @@
         <title>Edit Profile</title>
     </head>
 
-    <body>
+    <body onload="showEditProfile();">
         <div id="title">
             <a id="homepageButton" href="./home.html" target="_self">Friend Finder</a>
         </div>
@@ -39,8 +39,9 @@
         </div>
 
         <div id="profileLeft">
-            <a id="saveProfileButton" onclick="saveProfile();">Save Profile</a>
+            <a id="saveProfileButton" onclick="saveProfileEdits();">Save Profile</a>
             <br>
+            <label for="editUserBio">Bio</label>
             <textarea class="textBox" rows="12" cols="24" id="editUserBio" value=""></textarea>
             <label for="editUserInterests">Interests separated by a comma</label>
             <textarea class="textBox" rows="6" cols="24" id="editUserInterests" value=""></textarea>

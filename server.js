@@ -267,6 +267,38 @@ app.post("/messages/:convo/send", (req, res) => {
   }
 });
 
+app.get("/profile", (req, res) => {
+  if (authentication != "NOT ALLOWED") {
+    let curUser = req.cookies.login.username;
+    let toReturn = new Set();;
+
+    User.find({username: curUser})
+    .exec(function(error,results) {
+      try {
+        toReturn['fullName'] = results.fullName;
+        toReturn['photo'] = results.photo;
+        toReturn['age'] = results.age;
+        toReturn['location'] = results.location;
+        toReturn['bio'] = results.bio;
+
+        let userInterests = '';
+        for(var i = 0; i < results.interests.length; i++) {
+          if (i == results.interests.length-1) {
+            intList += results.interests[i].interest;
+          } else {
+            intList += results.interests[i].interest + ', ';
+          }
+        }
+        toReturn['interests'] = userInterests;
+
+        res.send(toReturn);
+      } catch {
+        res.send(error);
+      }
+    });
+  }
+});
+
 app.listen(3000, () => {
     console.log('server has started');
 });
