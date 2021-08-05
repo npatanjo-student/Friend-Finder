@@ -29,10 +29,10 @@ var UserSchema = new Schema ({
     hash: String,
     fullName : String,
     photo : String,
-    age : Number,
+    age : String,
     location : String,
     bio : String,
-    interests : [],
+    interests : [{type: Schema.ObjectId, ref: "Interests"}],
     messages : [{type: Schema.ObjectId, ref: "Messages"}]
 });
 
@@ -42,14 +42,14 @@ var MessagesSchema = new Schema ({
     messages : String,
 });
 
-// var InterestsSchema = new Schema ({
-//     interest : String,
-//     weight: Number
-// });
+var InterestsSchema = new Schema ({
+    interest : String,
+    weight: Number
+});
 
 var User = mongoose.model("User", UserSchema);
 var Messages = mongoose.model("Messages", MessagesSchema);
-// var Interests = mongoose.model("Interests", InterestsSchema);
+var Interests = mongoose.model("Interests", InterestsSchema);
 var sessionKeys = {};
 
 app.use("/home.html", authentication);
@@ -137,13 +137,53 @@ app.get("/login/:u/:p", (req, res) => {
   });
 });
 
-app.get("/save/:bio/:img/:u/:age/:loc", (req, res) => {
-  User.find({username: req.cookies.login.username}).exec(function(error, results) {
-    if (req.params.age != null) { results.interests.push(req.params.loc); } // might need to change null to undefined
-    if (req.params.loc != null) { results.interests.push(req.params.age); }
-    if (req.params.bio != null) { results.interests.push(req.params.bio); }
-    req.params.img == null ? results.img = "" : results.img = req.params.img;
-  });
+app.post("/save/", (req, res) => {
+  if (authentication != "NOT ALLOWED") {
+    let bio = JSON.parse(req.body.bio);
+    let img = JSON.parse(req.body.img);
+    let fullName = JSON.parse(req.body.fullName);
+    let age = JSON.parse(req.body.age);
+    let loc = JSON.parse(req.body.loc);
+    let newInterests = JSON.parse(req.body.interests);
+
+    var ageObj = new Interests(age);
+    var locObj = new Interests(loc);
+
+    ageObj.save(function (err) { if (err) console.log('could not save age'); });
+    locObj.save(function (err) { if (err) console.log('could not save location'); });
+
+    User.find({username: req.cookies.login.username}).exec(function(error, results) {
+      for(var i = 0; i < results.interests.length; i++) {
+        if (results.interests[i].weight == 1) {
+          results.interests.splice(i,1,locObj);
+        } else if (results.interests[i].weight == 2) {
+          results.interests.splice(i,1,ageObj);
+        }
+      }
+
+      for(var i = 0; i < newInterests.length; i++) {
+        let intObj = new Interests(newInterests[i]);
+        intObj.save(function (err) { if (err) console.log('could not save intObj ' + i); });
+        for(var j = 0; j < results.interests.length; j++) {
+          if (results.interests[j].interest == intObj.interest) {
+            continue;
+          } else {
+            results.interests.push(intObj);
+          }
+        }
+      }
+
+      bio == null ? results.bio = "" : results.bio = bio;
+      img == null ? results.photo = "" : results.photo = img;
+      fullName == null ? results.fullName = "" : results.fullName = fullName;
+      age == null ? results.age = "" : results.age = ageObj.interest;
+      loc == null ? results.location = "" : results.location = locObj.interest;
+    });
+    res.send("Changes Saved");
+  }
+  else {
+    res.send("Changes Could Not Be Saved");
+  }
 });
 
 app.get("/messages/", (req, res) => {
