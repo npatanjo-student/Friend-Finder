@@ -110,12 +110,14 @@ app.get("/add/user/:u/:p/:n", (req, res) => {
   });
 });
 
-app.get("/get/users/", (req, res) => {
-    User.find({})
-    .exec(function(error, results) {
-      res.send(JSON.stringify(results, null, 2));
-    });
+function getUsers() {
+  User.find({})
+  .populate("username")
+  .populate("interests")
+  .exec(function(error, results) {
+    return(results);
   });
+}
 
 app.get("/login/:u/:p", (req, res) => {
   User.find({username: req.params.u}).exec(function(error, results) {
@@ -306,8 +308,51 @@ app.get("/profile", (req, res) => {
   }
 });
 
+function createMatches(username) {
+  var users = getUsers();
+  var matches = new Set();
+  User.find({username: username})
+    .exec(function(error,results) {
+
+      // for each of the current user's interests...
+      for (i=0;i<results.interests.length;i++) {
+        // for each of the other users...
+        for (j=0;j<users.length;j++) {
+          // for each of the other user's interests...
+          for (k=0;k<users[j].interests.length;k++) {
+            // if they share an interest...
+            if (users[j].interests[k].interest == results.interests[i].interest) {
+              // if the other user is in the set already...
+              if (users[j].username in matches) {
+                matches[users[j].username] += results.interests[i].weight;
+              } else {
+                matches[users[j].username] = results.interests[i].weight;
+              }
+            }
+          }
+        }
+      }
+      let orderedMatches = Object.keys(matches).sort().reduce(
+        (obj, key) => { 
+          obj[key] = matches[key]; 
+          return obj;
+        }, 
+        {}
+      );
+
+      let matchesList =[];
+      for (key in orderedMatches) {
+        matchesList.push(key)
+      }
+      results.matches = matchesList;
+      // results.save(function (err) {if (err) console.log("an error occured");});
+    });
+}
+
 app.get("/get/matches", (req, res) => {
   if (authentication != "NOT ALLOWED") {
+    createMatches(req.cookies.login.username);
+
     let toReturn = new Set();
     let matches = filterMatches();
     User.find({username: matches[0]})
