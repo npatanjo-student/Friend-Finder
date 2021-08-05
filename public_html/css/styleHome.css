@@ -39,9 +39,6 @@
     border: 5px solid darkgray;
     color: white;
     background-color: darkgray;
-    border: 5px solid darkgray;
-    color: white;
-    background-color: darkgray;
     border-radius: 3px;
     padding-left: 5px;
     padding-right: 5px;
@@ -59,7 +56,7 @@
 
 }
 
-#messageMatchButton:hover, #skipProfileButton:hover {
+#messageMatchButton:hover, #skipProfileButton:hover, #helpButton:hover {
     border: 5px solid rgb(100, 210, 255);
     background-color: rgb(100, 210, 255);
 }
@@ -98,4 +95,29 @@
 
 #messagesButton {
     margin-right: 25px;
+}
+
+#helpButtonContainer {
+    position: relative;
+    float: right;
+}
+
+#helpButton {
+    text-decoration: none;
+    font-family: sans-serif;
+    font-weight: 100;
+    font-size: 20px;
+    border: 5px solid darkgray;
+    color: white;
+    background-color: darkgray;
+    border-radius: 25px;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+#footer {
+    position: fixed;
+    top: 90%;
+    left: 5%;
+    width: 90%;
 }

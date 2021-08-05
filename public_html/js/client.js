@@ -63,73 +63,12 @@ function userProfile() {
     window.location = "/userProfile.html"
 }
 
-function displayConvoTabs(data) {
-    var toReturn = '';
-    for (key in data) {
-        var username = key;
-        var fullName = data[key];
-        toReturn += '<a class="convoTabs" id="'+username+'" onclick="viewMessages('+username+');">'+ fullName +'</a>';
-    }    
-    return toReturn;
-}
-
-function viewConvos() {
-    $.ajax ({
-        url: "/messages/",
-        method: "GET",
-        success: function (result) {
-            let results = displayConvoTabs(result);
-            $('#conversations').html(results);
-        }
-    });
-}
-
-function displayMessages(data,username) {
-    var toReturn = '';
-    for (message in data) {
-        if (message.substring(0,3) == "to:") {
-            toReturn += '<div class="messageTo">' + message.substring(3) + '</div>';
-        } else if (message.substring(0,3) == "fr:") {
-            toReturn += '<div class="messageFrom">' + message.substring(3) + '</div>';
-        }
-    }
-    toReturn += '<textarea class="textBox" rows="12" cols="24" id="messageEntry" value="" placeholder="Start a new message"></textarea>';
-    toReturn += '<a id="sendMessageButton" onclick="sendMessage('+username+');">Send</a>';
-    return toReturn;
-}
-
-function viewMessages(convoID) {
-    $('.convoTabs').css('background-color','#ffffff');
-    $('.convoTabs').css('width','95%');
-    $(convoID).css('background-color','#lightgray');
-    $(convoID).css('width','100%');
-
-    $.ajax ({
-        url: "/messages/" + convoID,
-        method: "GET",
-        success: function (result) {
-            let results = displayMessages(result,convoID);
-            $('#currentChat').html(results);
-        }
-    });
-}
-
-function sendMessage(convoID) {
-    let message = $("messageEntry").val();
-    let from = '';
-    let toSend = {toID:convoID, fromID : from, messages:message}
-    let toSend_str = JSON.stringify(toSend);
-
-    $.ajax ({
-        url: "/messages/" + convo + "/send",
-        data: {message : toSend_str},
-        method: "POST",
-        success: function (result) {
-            alert(result);
-        }
-    });
+function userMessages() {
+    window.location = "/messages.html"
 }
 
 function editProfile() {
     window.location = "/editProfile.html"
 }
+
+

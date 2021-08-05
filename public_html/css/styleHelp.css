@@ -1,0 +1,49 @@
+
+/*
+    AUTHORS: Nate Patanjo, Nick Marquis
+    FILE: style.css
+    ASSIGNMENT: Final Project
+    COURSE: CSc 337; Summer 2021
+    PURPOSE: 
+*/
+
+#title {
+  display: inline-block;
+}
+
+@keyframes gradiant {
+  0% {
+    background-position: 0%;
+  }
+  100% {
+    background-position: 100%;
+  }
+}
+
+#homepageButton {
+  text-decoration: none;
+  background: radial-gradient(circle, #F58529 0%, #DD2A7B 40%,
+      #8134AF 60%, #515BD4 100%);
+  font-family: sans-serif;
+  font-weight: 100;
+  letter-spacing: 0.5rem;
+  font-size: 2rem;
+  padding: 10px;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-size: 200%;
+  animation: gradiant 5s linear infinite alternate;
+}
+
+#textBox {
+  text-align: center;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 100px;
+}
+
+h2, p {
+  font-family: sans-serif;
+  font-weight: 100;
+}

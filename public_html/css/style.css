@@ -37,7 +37,7 @@ body {
   text-decoration: none;
 }
 
-#loginPageButton:hover, #createAccountPageButton:hover{
+#loginPageButton:hover, #createAccountPageButton:hover, #helpButton:hover{
   border: 5px solid rgb(100, 210, 255);
   background-color: rgb(100, 210, 255);
 }
@@ -131,4 +131,29 @@ img {
   width: 700px;
   border: 2px solid none;
   border-radius: 25px;
+}
+
+#helpButtonContainer {
+    position: relative;
+    float: right;
+}
+
+#helpButton {
+    text-decoration: none;
+    font-family: sans-serif;
+    font-weight: 100;
+    font-size: 20px;
+    border: 5px solid darkgray;
+    color: white;
+    background-color: darkgray;
+    border-radius: 25px;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+#footer {
+    position: fixed;
+    top: 90%;
+    left: 5%;
+    width: 90%;
 }
