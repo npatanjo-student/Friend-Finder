@@ -198,7 +198,7 @@ app.get("/messages/", (req, res) => {
       for (message_obj in results[0].messages) {
         User.find({username: message_obj.toID})
         .exec(function(error,results) {
-          convoDict[results[0].username]=results[0].fullName;
+          convoDict[results[0].username]=[results[0].fullName, results[0].photo];
         });
       }
       res.send(convoDict);
@@ -215,6 +215,9 @@ app.get("/messages/:convo", (req, res) => {
     User.find({username: curUser})
     .populate("messages")
     .exec(function(error,results) {
+      messageList.push(results[0].fullName);
+      messageList.push(results[0].photo);
+
       for (message_obj in results[0].messages) {
         if (message_obj.toID == req.params.convo) {
           let userMessage = 'to:' + message_obj.messages;
@@ -363,6 +366,52 @@ function filterMatches() {
     }
   });
 }
+
+app.get("/profile/:friend", (req, res) => {
+  if (authentication != "NOT ALLOWED") {
+    let friend = req.params.friend;
+    let toReturn = new Set();
+    User.find({username: friend})
+    .exec(function(error,results) {
+      try {
+        toReturn['fullName'] = results.fullName;
+        toReturn['photo'] = results.photo;
+        toReturn['age'] = results.age;
+        toReturn['location'] = results.location;
+        toReturn['bio'] = results.bio;
+        toReturn['username'] = results.username;
+      } catch {
+        return (error);
+      }
+    });
+  } else {
+    res.send('NOT ALLOWED');
+  }
+});
+
+app.get("/delete/:friend", (req, res) => {
+  if (authentication != "NOT ALLOWED") {
+    let curUser = req.cookies.login.username;
+    let friend = req.params.friend;
+    User.find({username: curUser})
+    .populate("messages")
+    .exec(function(error,results) {
+      for (var i = 0; i< results[0].messages; i++) {
+        if (results[0].messages[i].toID == friend) {
+          results[0].messages.splice(i,1);
+          i--;
+        } else if (results[0].messages[i].fromID == friend) {
+          results[0].messages.splice(i,1);
+          i--;
+        }
+      }
+      results[0].skips.push(friend);
+    });
+    res.send("Friend Deleted");
+  } else {
+    res.send('NOT ALLOWED');
+  }
+});
 
 app.listen(3000, () => {
     console.log('server has started');

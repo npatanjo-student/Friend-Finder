@@ -19,7 +19,7 @@
     top: 100px;
     left: 33%;
     width: 65%;
-    height: 80%;
+    height: 69%;
 }
 
 #title {
@@ -92,5 +92,129 @@
 #helpButton:hover {
     border: 5px solid rgb(100, 210, 255);
     background-color: rgb(100, 210, 255);
+}
+
+.convoTabs {
+    position:relative;
+    display:inline-flex;
+    font-family: sans-serif;
+    font-weight: 100;
+    font-size: 20px;
+    padding: 10px;
+    border-bottom: 2px solid lightgray;
+    width: 90%;
+    overflow: auto;
+}
+
+.image-cropper-tab {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+img {
+    display: inline;
+    margin: 0 auto;
+    height: 100%;
+    width: auto;
+}
+
+.userInfo {
+    padding-bottom: 10px;
+}
+
+.image-cropper {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.friendPhoto {
+    display: inline;
+    margin: 0 auto;
+    height: 100%;
+    width: auto;
+}
+
+.friendFullName {
+    position:absolute;
+    font-family: sans-serif;
+    font-weight: 100;
+    font-size: 30px;
+    left: 120px;
+    top:35px;
+    display: inline;
+}
+
+#currentChat {
+    position: relative;
+    width: 100%;
+    height: 80%;
+    overflow:auto;
+}
+
+.firstMessage {
+    text-align: center;
+    font-family: sans-serif;
+    font-weight: 100;
+    font-size: 12px;
+    padding: 10px;
+    border-bottom: 1px solid lightgray;
+    margin-bottom: 10px;
+}
+
+.messageTo {
+    margin-left: auto;
+    font-family: sans-serif;
+    font-weight: 100;
+    font-size: 15px;
+    padding: 10px;
+    border: 1px solid #9CD4FF;
+    border-radius:10px;
+    background-color: #9CD4FF;
+    width: fit-content;
+    margin-bottom: 10px;
+}
+
+.messageFrom {
+    margin-right: auto;
+    font-family: sans-serif;
+    font-weight: 100;
+    font-size: 15px;
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius:10px;
+    width: fit-content;
+    margin-bottom: 10px;
+}
+
+#messageEntry {
+    position: fixed;
+    top : 83%;
+    width : 50%;
+    height: 7%;
+    font-family: sans-serif;
+    font-weight: 100;
+    font-size: 15px;
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius:10px;
+}
+
+#sendMessageButton {
+    position: fixed;
+    top : 85%;
+    right: 10%;
+    font-family: sans-serif;
+    font-weight: 100;
+    font-size: 15px;
+    padding: 10px;
+    border: 1px solid #9CD4FF;
+    border-radius:10px;
+    background-color: #9CD4FF;
 }
 

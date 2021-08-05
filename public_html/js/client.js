@@ -118,8 +118,12 @@ function displayConvoTabs(data) {
     var toReturn = '';
     for (key in data) {
         var username = key;
-        var fullName = data[key];
-        toReturn += '<a class="convoTabs" id="'+username+'" onclick="viewMessages('+username+');">'+ fullName +'</a>';
+        var fullName = data[key][0];
+        var photo = data[key][1];
+        toReturn += '<div class="convoTabs">';
+        toReturn += '<div class="image-cropper-tab"><a class="friendFullNameTab" onclick="viewMessages('+username+');">'+ fullName +'</a></div>';
+        toReturn += '<img src="img/'+photo+'" alt="User Image">';
+        toReturn += '</div>';
     }    
     return toReturn;
 }
@@ -152,10 +156,22 @@ function displayMessages(data,username) {
     toReturn += '<a id="sendMessageButton" onclick="sendMessage('+username+');">Send</a>';
     return toReturn;
 }
+function displayFriend(data,username) {
+    var fullName = data[0];
+    var photo = data[1];
+    data.splice(0,2);
+
+    toReturn += '<div class="userInfo">';
+    toReturn += '<div class="image-cropper"> <img class="friendPhoto" src="img/'+photo+'" alt="User Image" onclick="viewFriendProfile('+username+');"></div>';
+    toReturn += '<div class="friendFullName">'+fullName+'</div>';
+    toReturn += '</div>';
+    toReturn += '<div id="currentChat"></div>';
+    return toReturn;
+}
 
 function viewMessages(convoID) {
     $('.convoTabs').css('background-color','#ffffff');
-    $('.convoTabs').css('width','95%');
+    $('.convoTabs').css('width','90%');
     $(convoID).css('background-color','#lightgray');
     $(convoID).css('width','100%');
 
@@ -164,7 +180,10 @@ function viewMessages(convoID) {
         method: "GET",
         success: function (result) {
             let results = displayMessages(result,convoID);
+            let friend = displayMessages(result,convoID);
+            $('#messagesRight').html(friend);
             $('#currentChat').html(results);
+            $("#currentChat").scrollTop($("#currentChat")[0].scrollHeight);
         }
     });
 }
@@ -209,7 +228,7 @@ function messageMatch(username) {
     });
     
     window.location = "/messages.html";
-    
+
     viewMessages(username);
 }
 
@@ -235,7 +254,44 @@ function showMatch() {
             $('#matchAge').text(result['age']);
             $('#matchLocation').text(result['location']);
             $('#matchBio').text(result['bio']);
-            $('homeLeftOptions').html('<a id="messageMatchButton" onclick="messageMatch('+result['username']+');">Message</a> <a id="skipProfileButton" onclick="skipProfile('+result['username']+');">Skip Profile</a>');
+            $('#homeLeftOptions').html('<a id="messageMatchButton" onclick="messageMatch('+result['username']+');">Message</a> <a id="skipProfileButton" onclick="skipProfile('+result['username']+');">Skip Profile</a>');
+        }
+    });
+}
+
+function viewFriendProfile(username) {
+    window.location = "/friendProfile.html";
+
+    $.ajax ({
+        url: "/profile/"+username,
+        method: "GET",
+        success: function (result) {
+            $('#friendName').text(result['fullName']);
+            $('#friendImage').text(result['photo']);
+            $('#friendAge').text(result['age']);
+            $('#friendLocation').text(result['location']);
+            $('#friendBio').text(result['bio']);
+            $('#friendOptions').html('<a id="messageFriendButton" onclick="messageFriend('+username+');">Message</a> <a id="deleteFriendButton" onclick="deleteFriend('+username+');">Delete Friend</a>');
+        }
+    });
+}
+
+function messageFriend(username) {
+    window.location = "/messages.html";
+
+    viewMessages(username);
+}
+
+function deleteFriend(username) {
+    $('#friendOptions').html('<a id="doDeleteFriendButton" onclick="reallyDeleteFriend('+username+');">Delete</a> <a id="dontDeleteFriendButton" onclick="viewFriendProfile('+username+');">Go Back</a>');
+}
+
+function reallyDeleteFriend(username) {
+    $.ajax ({
+        url: "/delete/"+username,
+        method: "GET",
+        success: function (result) {
+            alert(result);
         }
     });
 }
