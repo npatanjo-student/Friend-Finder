@@ -139,7 +139,11 @@ function displayMessages(data,username) {
     var toReturn = '';
     for (message in data) {
         if (message.substring(0,3) == "to:") {
-            toReturn += '<div class="messageTo">' + message.substring(3) + '</div>';
+            if (message == "to:Start of Conversation") {
+                toReturn += '<div class="firstMessage">' + message.substring(3) + '</div>';
+            } else {
+                toReturn += '<div class="messageTo">' + message.substring(3) + '</div>';
+            }
         } else if (message.substring(0,3) == "fr:") {
             toReturn += '<div class="messageFrom">' + message.substring(3) + '</div>';
         }
@@ -187,4 +191,51 @@ function editProfile() {
 
 function userMessages() {
     window.location = "/messages.html"
+}
+
+function messageMatch(username) {
+    let message = 'Start of Conversation';
+    let from = '';
+    let toSend = {toID:username, fromID : from, messages:message}
+    let toSend_str = JSON.stringify(toSend);
+
+    $.ajax ({
+        url: "/messages/" + convo + "/send",
+        data: {message : toSend_str},
+        method: "POST",
+        success: function (result) {
+            alert(result);
+        }
+    });
+    
+    window.location = "/messages.html";
+    
+    viewMessages(username);
+}
+
+function skipProfile(username) {
+    $.ajax ({
+        url: "/skip/match",
+        method: "POST",
+        data: {user : username},
+        success: function (result) {
+            alert(result);
+        }
+    });
+    showMatch();
+}
+
+function showMatch() {
+    $.ajax ({
+        url: "/get/matches",
+        method: "GET",
+        success: function (result) {
+            $('#matchName').text(result['fullName']);
+            $('#matchImage').text(result['photo']);
+            $('#matchAge').text(result['age']);
+            $('#matchLocation').text(result['location']);
+            $('#matchBio').text(result['bio']);
+            $('homeLeftOptions').html('<a id="messageMatchButton" onclick="messageMatch('+result['username']+');">Message</a> <a id="skipProfileButton" onclick="skipProfile('+result['username']+');">Skip Profile</a>');
+        }
+    });
 }

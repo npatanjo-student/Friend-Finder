@@ -33,13 +33,15 @@ var UserSchema = new Schema ({
     location : String,
     bio : String,
     interests : [{type: Schema.ObjectId, ref: "Interests"}],
-    messages : [{type: Schema.ObjectId, ref: "Messages"}]
+    messages : [{type: Schema.ObjectId, ref: "Messages"}],
+    matches : [],
+    skips : []
 });
 
 var MessagesSchema = new Schema ({
     toID : String,
     fromID : String,
-    messages : String,
+    messages : String
 });
 
 var InterestsSchema = new Schema ({
@@ -270,7 +272,7 @@ app.post("/messages/:convo/send", (req, res) => {
 app.get("/profile", (req, res) => {
   if (authentication != "NOT ALLOWED") {
     let curUser = req.cookies.login.username;
-    let toReturn = new Set();;
+    let toReturn = new Set();
 
     User.find({username: curUser})
     .exec(function(error,results) {
@@ -296,8 +298,71 @@ app.get("/profile", (req, res) => {
         res.send(error);
       }
     });
+  } else {
+    res.send('NOT ALLOWED');
   }
 });
+
+app.get("/get/matches", (req, res) => {
+  if (authentication != "NOT ALLOWED") {
+    let toReturn = new Set();
+    let matches = filterMatches();
+    User.find({username: matches[0]})
+    .exec(function(error,results) {
+      try {
+        toReturn['fullName'] = results.fullName;
+        toReturn['photo'] = results.photo;
+        toReturn['age'] = results.age;
+        toReturn['location'] = results.location;
+        toReturn['bio'] = results.bio;
+        toReturn['username'] = results.username;
+      } catch {
+        return (error);
+      }
+    });
+  } else {
+    res.send('NOT ALLOWED');
+  }
+});
+
+app.post("/skip/match", (req, res) => {
+  if (authentication != "NOT ALLOWED") {
+    let user = JSON.parse(req.body.user);
+    let curUser = req.cookies.login.username;
+  
+    User.find({username: curUser})
+    .exec(function(error,results) {
+      try {
+        results.skips.push(user);
+      } catch {
+        return (error);
+      }
+    });
+  } else {
+    res.send('NOT ALLOWED');
+  }
+});
+
+function filterMatches() {
+  let curUser = req.cookies.login.username;
+  
+  User.find({username: curUser})
+  .exec(function(error,results) {
+     try {
+      for (var i = 0; i < results.matches.length; i++) {
+        for (var j = 0; j < results.skips.length; j++) {
+          if (results.matches[i] == results.skips[j]) {
+            results.matches.splice(i,1);
+            i -= 1;
+          }
+        }
+      }
+      return (results.matches);
+     } catch {
+      return (error);
+    }
+  });
+}
 
 app.listen(3000, () => {
     console.log('server has started');
