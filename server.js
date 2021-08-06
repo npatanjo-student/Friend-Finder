@@ -243,9 +243,9 @@ app.get("/messages/", (req, res) => {
     .populate("messages")
     .exec(function(error,results) {
       for (message_obj in results[0].messages) {
-        User.find({username: message_obj.toID})
-        .exec(function(error,results) {
-          convoDict[results[0].username]=[results[0].fullName, results[0].photo];
+        User.find({username: results[0].messages[message_obj].toID})
+        .exec(function(error,result) {
+          convoDict[results[0].username]=[result[0].fullName, result[0].photo];
         });
       }
       res.send(convoDict);
@@ -288,32 +288,26 @@ app.post("/messages/:convo/send", (req, res) => {
     let message = JSON.parse(req.body.message);
 
     var messageObj = new Messages(message);
-
     messageObj.fromID = curUser;
+    messageObj.save(function (err) { if (err) console.log('could not save message2 '+err); });
 
-    messageObj.save(function (err) { if (err) console.log('could not save message'); });
 
     User.find({username: curUser})
     .exec(function(error,results) {
-      try {
-        let userMessages = results[0].messages;
-        userMessages.push(message);
-      } catch {
-        res.send(error);
-      }
+      console.log(results[0].messages);
+      results[0].messages.push(messageObj);
+      console.log(results[0].messages);
+      results[0].save(function (err) {if (err) console.log("an error occured");});
     });
 
     User.find({username: req.params.convo})
     .exec(function(error,results) {
-      try {
-        let userMessages = results[0].messages;
-        userMessages.push(message);
-      } catch {
-        res.send(error);
-      }
-      
+      console.log(results[0].messages);
+      results[0].messages.push(messageObj);
+      console.log(results[0].messages);
+      results[0].save(function (err) {if (err) console.log("an error occured");});
     });
-    res.send("Message Sent");
+    console.log("Message Sent");
   } else {
     res.send('NOT ALLOWED');
   }

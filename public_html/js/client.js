@@ -132,6 +132,8 @@ function showUserProfile() {
 }
 
 function displayConvoTabs(data) {
+    console.log('data');
+    console.log(data);
     var toReturn = '';
     for (key in data) {
         var username = key;
@@ -141,8 +143,12 @@ function displayConvoTabs(data) {
         toReturn += '<div class="image-cropper-tab"><a class="friendFullNameTab" onclick="viewMessages('+username+');">'+ fullName +'</a></div>';
         toReturn += '<img src="img/'+photo+'" alt="User Image">';
         toReturn += '</div>';
-    }    
-    return toReturn;
+        console.log('toReturn');
+        console.log(toReturn);
+    }
+    console.log('last toReturn');
+    console.log(toReturn);
+    $('#conversations').html(toReturn);;
 }
 
 function viewConvos() {
@@ -154,8 +160,7 @@ function viewConvos() {
                 alert('Please log in');
                 window.location = "/login.html"
             } else {
-                let results = displayConvoTabs(result);
-                $('#conversations').html(results);
+                displayConvoTabs(result);
             }
         }
     });
@@ -251,7 +256,7 @@ function messageMatch(username) {
     let toSend_str = JSON.stringify(toSend);
 
     $.ajax ({
-        url: "/messages/" + convo + "/send",
+        url: "/messages/" + username + "/send",
         data: {message : toSend_str},
         method: "POST",
         success: function (result) {
@@ -259,14 +264,12 @@ function messageMatch(username) {
                 alert('Please log in');
                 window.location = "/login.html"
             } else {
-                alert(result);
+                console.log("OK");
+                window.location = "/messages.html";
+                viewMessages(username);
             }
         }
     });
-    
-    window.location = "/messages.html";
-
-    viewMessages(username);
 }
 
 function skipProfile(username) {
@@ -300,7 +303,7 @@ function showMatch() {
                 $('#matchAge').text(result['age']);
                 $('#matchLocation').text(result['location']);
                 $('#matchBio').text(result['bio']);
-                $('#homeLeftOptions').html('<a id="messageMatchButton" onclick="messageMatch('+result['username']+');">Message</a> <a id="skipProfileButton" onclick="skipProfile('+result['username']+');">Skip Profile</a>');
+                $('#homeLeftOptions').html('<a id="messageMatchButton" onclick="messageMatch(\''+result['username']+'\');">Message</a> <a id="skipProfileButton" onclick="skipProfile(\''+result['username']+'\');">Skip Profile</a>');
             }
         }
     });
