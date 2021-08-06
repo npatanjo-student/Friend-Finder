@@ -174,6 +174,7 @@ app.get("/login/:u/:p", (req, res) => {
           let sessionKey = Math.floor(Math.random() * 1000);
           sessionKeys[req.params.u] = [sessionKey, Date.now()];
           res.cookie("login", {username: req.params.u, key: sessionKey}, {maxAge: 120000});
+          createMatches(req.params.u);
           res.send("logged in");
         } else {
           res.send("Please Try Again");
@@ -326,27 +327,16 @@ app.get("/profile", (req, res) => {
     User.find({username: curUser})
     .exec(function(error,results) {
       try {
-        console.log("/profile");
-        console.log(results);
         toReturn['fullName'] = results[0].fullName;
-        console.log(results[0].fullName);
         toReturn['photo'] = results[0].photo;
-        console.log(results[0].photo);
         toReturn['age'] = results[0].age;
-        console.log(results[0].age);
         toReturn['location'] = results[0].location;
-        console.log(results[0].location);
         toReturn['bio'] = results[0].bio;
-        console.log(results[0].bio);
         let userInterests = '';
-        console.log(results[0].interests.length);
         for(var i = 2; i < results[0].interests.length; i++) {
-          console.log(results[0].interests[i].interest);
           if (i == results[0].interests.length-1) {
-            console.log('-1');
             userInterests += results[0].interests[i].interest;
           } else {
-            console.log('not-1');
             userInterests += results[0].interests[i].interest + ', ';
           }
         }
@@ -370,7 +360,8 @@ function createMatches(username) {
         for (let j = 0; j < resultsUsers.length; j++) {
           for (let k = 0; k < resultsUsers[j].interests.length; k++) {
             if (resultsUsers[j].interests[k].interest == resultsCurrent.interests[i].interest &&
-              resultsUsers[j].username != resultsCurrent.username) {
+              resultsUsers[j].username != resultsCurrent.username && 
+              !(resultsCurrent.skips.includes(resultsUsers[j].username))) {
               matches.add(resultsUsers[j]);
             }
           }
@@ -378,7 +369,6 @@ function createMatches(username) {
       }
       resultsCurrent.matches = Array.from(matches);
       resultsCurrent.save(function (err) {if (err) console.log("an error occured");});
-      console.log(resultsCurrent.matches);
     });
   });
 }
@@ -453,26 +443,27 @@ function createMatches(username) {
 }
 */
 app.get("/get/matches", (req, res) => {
-  if (authentication(req, res)  != "NOT ALLOWED") {
-    createMatches(req.cookies.login.username);
-
+  if (authentication(req, res)  != "NOT ALLOWED") {  
     let toReturn = new Set();
-    let matches = filterMatches(req);
-    if (matches != undefined) {
-      User.find({username: matches[0]})
-      .exec(function(error,results) {
+    User.find({username: req.cookies.login.username})
+    .exec(function(error,results) {
+      User.find({username: results[0].matches[0].username})
+      .exec(function(error,result) {
         try {
-          toReturn['fullName'] = results[0].fullName;
-          toReturn['photo'] = results[0].photo;
-          toReturn['age'] = results[0].age;
-          toReturn['location'] = results[0].location;
-          toReturn['bio'] = results[0].bio;
-          toReturn['username'] = results[0].username;
+          console.log('result');
+          console.log(result);
+          toReturn['fullName'] = result[0].fullName;
+          toReturn['photo'] = result[0].photo;
+          toReturn['age'] = result[0].age;
+          toReturn['location'] = result[0].location;
+          toReturn['bio'] = result[0].bio;
+          toReturn['username'] = result[0].username;
+          res.send(toReturn);
         } catch {
           return (error);
         }
       });
-    }
+    });
   } else {
     res.send('NOT ALLOWED');
   }
@@ -497,6 +488,7 @@ app.post("/skip/match", (req, res) => {
 });
 
 function filterMatches(req) {
+  console.log('filter');
   let curUser = req.cookies.login.username;
   
   User.find({username: curUser})
@@ -510,6 +502,7 @@ function filterMatches(req) {
           }
         }
       }
+      console.log('filter done');
       return (results[0].matches);
      } catch {
       return (error);
