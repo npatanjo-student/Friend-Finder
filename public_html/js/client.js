@@ -5,17 +5,6 @@
     COURSE: CSc 337; Summer 2021
     PURPOSE: 
 */
-function update() {
-    $.ajax({
-        url: '/some/path',
-        data: { name: 'Joe' },
-        method: 'GET',
-        success: function( result ) {
-            alert(result);
-        }
-    });
-}
-
 function createAccount() {
     let u = $("#signupUsername").val();
     let p = $("#signupPassword").val();
@@ -23,7 +12,7 @@ function createAccount() {
     $.ajax({
         url: "/add/user/" + u + "/" + p + "/" + n,
         method: "GET",
-        success: function (result) {alert("User added");}
+        success: function (result) {alert(result);}
     });
 }
 
@@ -53,24 +42,26 @@ function saveProfileEdits() {
    // let loc = $("editUserLocation").val();
 //    let interests = $("editUserInterests").val();
     let bio = document.getElementById("editUserBio").value;
-    let img = document.getElementById("editUserBio").value;
+    let img = document.getElementById("editUserImage").value;
     let fullName = document.getElementById("editUserName").value;
     let age = document.getElementById("editUserAge").value;
     let loc = document.getElementById("editUserLocation").value;
     let interests = document.getElementById("editUserInterests").value;
 
-    let age_int = {interest : age, weight : 2};
+    let age_int = {interest : age, weight : 3};
     let age_str = JSON.stringify(age_int);
 
-    let loc_int = {interest : loc, weight : 1};
+    let loc_int = {interest : loc, weight : 2};
     let loc_str = JSON.stringify(loc_int);
 
-    let interestsSplit = interests.split(",");
+    let interestsSplit = interests.split(", ");
     for (interest in interestsSplit) {
-        let interest_JSON = {interest : interest, weight : 3};
+        let interest_JSON = {interest : interestsSplit[interest], weight : 1};
         let interest_str = JSON.stringify(interest_JSON);
         interestsList.push(interest_str);
     }
+    let interestsJSON = JSON.stringify(interestsList);
+
     $.ajax ({
         url: "/save/",
         data: {bio : bio,
@@ -78,10 +69,16 @@ function saveProfileEdits() {
                 fullName : fullName,
                 age: age_str,
                 loc: loc_str,
-                interests : interestsList},
+                interests : interestsJSON},
         method: "POST",
         success: function (result) {
-            alert(result);
+            if (result == 'NOT ALLOWED') {
+                alert('Please log in');
+                window.location = "/login.html"
+            } else {
+                alert(result);
+                userProfile()
+            }
         }
     });
 }
@@ -91,12 +88,22 @@ function showEditProfile() {
         url: "/profile/",
         method: "GET",
         success: function (result) {
-            $('#editUserName').val(result['fullName']);
-            $('#editUserImage').val(result['photo']);
-            $('#editUserAge').val(result['age']);
-            $('#editUserLocation').val(result['location']);
-            $('#editUserBio').val(result['bio']);
-            $('#editUserInterests').val(result['interests']);
+            if (result == 'NOT ALLOWED') {
+                alert('Please log in');
+                window.location = "/login.html"
+            } else {
+                console.log(result);
+                console.log(result['fullName']);
+                $('#editUserName').val(result['fullName']);
+                console.log(result['age']);
+                $('#editUserAge').val(result['age']);
+                console.log(result['location']);
+                $('#editUserLocation').val(result['location']);
+                console.log(result['bio']);
+                $('#editUserBio').val(result['bio']);
+                console.log(result['interests']);
+                $('#editUserInterests').val(result['interests']);
+            }
         }
     });
 }
@@ -110,12 +117,16 @@ function showUserProfile() {
         url: "/profile/",
         method: "GET",
         success: function (result) {
-            $('#userName').text(result['fullName']);
-            $('#userImage').text(result['photo']);
-            $('#userAge').text(result['age']);
-            $('#userLocation').text(result['location']);
-            $('#userBio').text(result['bio']);
-            $('#userInterests').text(result['interests']);
+            if (result == 'NOT ALLOWED') {
+                alert('Please log in');
+                window.location = "/login.html"
+            } else {
+                $('#userName').text(result['fullName']);
+                $('#userImage').text(result['photo']);
+                $('#userAge').text(result['age']);
+                $('#userLocation').text(result['location']);
+                $('#userBio').text(result['bio']);
+            }
         }
     });
 }
@@ -139,8 +150,13 @@ function viewConvos() {
         url: "/messages/",
         method: "GET",
         success: function (result) {
-            let results = displayConvoTabs(result);
-            $('#conversations').html(results);
+            if (result == 'NOT ALLOWED') {
+                alert('Please log in');
+                window.location = "/login.html"
+            } else {
+                let results = displayConvoTabs(result);
+                $('#conversations').html(results);
+            }
         }
     });
 }
@@ -185,11 +201,16 @@ function viewMessages(convoID) {
         url: "/messages/" + convoID,
         method: "GET",
         success: function (result) {
-            let results = displayMessages(result,convoID);
-            let friend = displayMessages(result,convoID);
-            $('#messagesRight').html(friend);
-            $('#currentChat').html(results);
-            $("#currentChat").scrollTop($("#currentChat")[0].scrollHeight);
+            if (result == 'NOT ALLOWED') {
+                alert('Please log in');
+                window.location = "/login.html"
+            } else {
+                let results = displayMessages(result,convoID);
+                let friend = displayMessages(result,convoID);
+                $('#messagesRight').html(friend);
+                $('#currentChat').html(results);
+                $("#currentChat").scrollTop($("#currentChat")[0].scrollHeight);
+            }
         }
     });
 }
@@ -205,7 +226,12 @@ function sendMessage(convoID) {
         data: {message : toSend_str},
         method: "POST",
         success: function (result) {
-            alert(result);
+            if (result == 'NOT ALLOWED') {
+                alert('Please log in');
+                window.location = "/login.html"
+            } else {
+                alert(result);
+            }
         }
     });
 }
@@ -229,7 +255,12 @@ function messageMatch(username) {
         data: {message : toSend_str},
         method: "POST",
         success: function (result) {
-            alert(result);
+            if (result == 'NOT ALLOWED') {
+                alert('Please log in');
+                window.location = "/login.html"
+            } else {
+                alert(result);
+            }
         }
     });
     
@@ -244,7 +275,12 @@ function skipProfile(username) {
         method: "POST",
         data: {user : username},
         success: function (result) {
-            alert(result);
+            if (result == 'NOT ALLOWED') {
+                alert('Please log in');
+                window.location = "/login.html"
+            } else {
+                alert(result);
+            }
         }
     });
     showMatch();
@@ -255,12 +291,17 @@ function showMatch() {
         url: "/get/matches",
         method: "GET",
         success: function (result) {
-            $('#matchName').text(result['fullName']);
-            $('#matchImage').text(result['photo']);
-            $('#matchAge').text(result['age']);
-            $('#matchLocation').text(result['location']);
-            $('#matchBio').text(result['bio']);
-            $('#homeLeftOptions').html('<a id="messageMatchButton" onclick="messageMatch('+result['username']+');">Message</a> <a id="skipProfileButton" onclick="skipProfile('+result['username']+');">Skip Profile</a>');
+            if (result == 'NOT ALLOWED') {
+                alert('Please log in');
+                window.location = "/login.html"
+            } else {
+                $('#matchName').text(result['fullName']);
+                $('#matchImage').text(result['photo']);
+                $('#matchAge').text(result['age']);
+                $('#matchLocation').text(result['location']);
+                $('#matchBio').text(result['bio']);
+                $('#homeLeftOptions').html('<a id="messageMatchButton" onclick="messageMatch('+result['username']+');">Message</a> <a id="skipProfileButton" onclick="skipProfile('+result['username']+');">Skip Profile</a>');
+            }
         }
     });
 }
@@ -272,12 +313,17 @@ function viewFriendProfile(username) {
         url: "/profile/"+username,
         method: "GET",
         success: function (result) {
-            $('#friendName').text(result['fullName']);
-            $('#friendImage').text(result['photo']);
-            $('#friendAge').text(result['age']);
-            $('#friendLocation').text(result['location']);
-            $('#friendBio').text(result['bio']);
-            $('#friendOptions').html('<a id="messageFriendButton" onclick="messageFriend('+username+');">Message</a> <a id="deleteFriendButton" onclick="deleteFriend('+username+');">Delete Friend</a>');
+            if (result == 'NOT ALLOWED') {
+                alert('Please log in');
+                window.location = "/login.html"
+            } else {
+                $('#friendName').text(result['fullName']);
+                $('#friendImage').text(result['photo']);
+                $('#friendAge').text(result['age']);
+                $('#friendLocation').text(result['location']);
+                $('#friendBio').text(result['bio']);
+                $('#friendOptions').html('<a id="messageFriendButton" onclick="messageFriend('+username+');">Message</a> <a id="deleteFriendButton" onclick="deleteFriend('+username+');">Delete Friend</a>');
+            }
         }
     });
 }
@@ -297,7 +343,12 @@ function reallyDeleteFriend(username) {
         url: "/delete/"+username,
         method: "GET",
         success: function (result) {
-            alert(result);
+            if (result == 'NOT ALLOWED') {
+                alert('Please log in');
+                window.location = "/login.html"
+            } else {
+                alert(result);
+            }
         }
     });
 }
