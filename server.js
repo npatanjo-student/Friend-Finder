@@ -363,6 +363,28 @@ app.get("/profile", (req, res) => {
 });
 
 function createMatches(username) {
+  var matches = new Set();
+  User.find({}).exec(function(error, resultsUsers) {
+    User.findOne({username: username}).exec(function(error,resultsCurrent) {
+      for (let i = 0; i < resultsCurrent.interests.length; i++) {
+        for (let j = 0; j < resultsUsers.length; j++) {
+          for (let k = 0; k < resultsUsers[j].interests.length; k++) {
+            if (resultsUsers[j].interests[k].interest == resultsCurrent.interests[i].interest &&
+              resultsUsers[j].username != resultsCurrent.username) {
+              matches.add(resultsUsers[j]);
+            }
+          }
+        }
+      }
+      resultsCurrent.matches = Array.from(matches);
+      resultsCurrent.save(function (err) {if (err) console.log("an error occured");});
+      console.log(resultsCurrent.matches);
+    });
+  });
+}
+
+/*
+function createMatches(username) {
   var users = new Set();
   User.find({})
   .exec(function(error, results) {
@@ -375,24 +397,29 @@ function createMatches(username) {
     }
     console.log(users);
   });
-
   var matches = new Set();
-  User.find({username: username})
+  User.findOne({username: username})
     .exec(function(error,results) {
+      console.log("USER AT 0: " + users[0]);
       //if (results[0].interests != undefined) {
         // for each of the current user's interests...
-        for (i=0;i<results[0].interests.length;i++) {
+        for (i=0;i<results.interests.length;i++) {
+              console.log("CURRENT USER INTEREST: " + results.interests[i].interest);
           // for each of the other users...
           for (j=0;j<users.length;j++) {
             // for each of the other user's interests...
             for (k=0;k<users[j].interests.length;k++) {
               // if they share an interest...
-              if (users[j].interests[k].interest == results[0].interests[i].interest) {
+              console.log("OTHER USER INTERSTS: " + users[j].interests[k].interests);
+              if (users[j].interests[k].interest == results.interests[i].interest) {
                 // if the other user is in the set already...
+                console.log("MADE IT IN IF STATEMENT");
+                matches.add(users[j]);
                 if (users[j].username in matches) {
-                  matches[users[j].username] += results[0].interests[i].weight;
+                  matches[users[j].username] += results.interests[i].weight;
+                  
                 } else {
-                  matches[users[j].username] = results[0].interests[i].weight;
+                  matches[users[j].username] = results.interests[i].weight;
                 }
               }
             }
@@ -419,12 +446,12 @@ function createMatches(username) {
         }
         console.log('matchesList');
         console.log(matchesList);
-        results[0].matches = matchesList;
-        results[0].save(function (err) {if (err) console.log("an error occured");});
+        results.matches = matchesList;
+        results.save(function (err) {if (err) console.log("an error occured");});
       }
     });
 }
-
+*/
 app.get("/get/matches", (req, res) => {
   if (authentication(req, res)  != "NOT ALLOWED") {
     createMatches(req.cookies.login.username);
