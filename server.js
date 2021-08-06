@@ -129,7 +129,6 @@ app.get("/add/user/:u/:p/:n", (req, res) => {
         if (err) throw err;
         let res = {salt: salt, hash: hash.toString("base64"), iterations: iterations };
         let hashStr = hash.toString("base64");
-        console.log(res);
         var user = new User({
           "username" : req.params.u,
           "salt" : salt,
@@ -137,10 +136,9 @@ app.get("/add/user/:u/:p/:n", (req, res) => {
           "fullName" : req.params.n
         });
         user.save(function (err) {if (err) console.log("an error occured");});
-        res.send("User created")
       });
     } else {
-      res.send("Username is already in use.")
+      res.send("Username is already in use.");
     }
   });
 });
@@ -404,24 +402,26 @@ function createMatches(username) {
       }
       console.log('matches');
       console.log(matches);
-      let orderedMatches = Object.keys(matches).sort().reduce(
-        (obj, key) => { 
-          obj[key] = matches[key]; 
-          console.log('obj');
-          console.log(obj);
-          return obj;
-        }, 
-      );
-      console.log('orderedMatches');
-      console.log(orderedMatches);
-      let matchesList =[];
-      for (key in orderedMatches) {
-        matchesList.push(key)
+      if (matches.length > 0) {
+        let orderedMatches = Object.keys(matches).sort().reduce(
+          (obj, key) => { 
+            obj[key] = matches[key]; 
+            console.log('obj');
+            console.log(obj);
+            return obj;
+          } 
+        );
+        console.log('orderedMatches');
+        console.log(orderedMatches);
+        let matchesList =[];
+        for (key in orderedMatches) {
+          matchesList.push(key)
+        }
+        console.log('matchesList');
+        console.log(matchesList);
+        results[0].matches = matchesList;
+        results[0].save(function (err) {if (err) console.log("an error occured");});
       }
-      console.log('matchesList');
-      console.log(matchesList);
-      results[0].matches = matchesList;
-      results[0].save(function (err) {if (err) console.log("an error occured");});
     });
 }
 
