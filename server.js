@@ -379,7 +379,7 @@ function createMatches(username) {
   var matches = new Set();
   User.find({username: username})
     .exec(function(error,results) {
-      if (results[0].interests != undefined) {
+      //if (results[0].interests != undefined) {
         // for each of the current user's interests...
         for (i=0;i<results[0].interests.length;i++) {
           // for each of the other users...
@@ -399,7 +399,7 @@ function createMatches(username) {
             console.log(matches);
           }
         }
-      }
+      //}
       console.log('matches');
       console.log(matches);
       if (matches.length > 0) {
