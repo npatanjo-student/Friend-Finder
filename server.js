@@ -32,7 +32,8 @@ var UserSchema = new Schema ({
     age : String,
     location : String,
     bio : String,
-    interests : [{type: Schema.ObjectId, ref: "Interests"}],
+    //interests : [{type: Schema.ObjectId, ref: "Interests"}],
+    interests : [],
     messages : [{type: Schema.ObjectId, ref: "Messages"}],
     matches : [],
     skips : []
@@ -54,8 +55,8 @@ var Messages = mongoose.model("Messages", MessagesSchema);
 var Interests = mongoose.model("Interests", InterestsSchema);
 var sessionKeys = {};
 
-app.use("/home.html", authentication);
-app.use("/userProfile.html", authentication);
+app.use('/index.html', express.static('public_html/index'));
+app.use('/user.html', authentication);
 app.use("/", express.static('public_html'))
 
 mongoose.connect(mongoDBURL , { useNewUrlParser: true });
@@ -73,10 +74,19 @@ function updateSessions() {
 
 setInterval(updateSessions, 2000);
 
+app.get("/get/users", function (req, res) {
+  User.find({}).exec(function(error, results) {
+    res.send(JSON.stringify(results));
+  });
+});
+
 function authentication(req, res, next) {
     if (Object.keys(req.cookies).length > 0) {
       let u = req.cookies.login.username;
       let key = req.cookies.login.key;
+      if (sessionKeys[u] == undefined) {
+        console.log(sessionKeys);
+      }
       if ( Object.keys(sessionKeys[u]).length > 0 && sessionKeys[u][0] == key) {
         next();
       } else {
@@ -129,7 +139,7 @@ app.get("/login/:u/:p", (req, res) => {
         if (results[0].hash == hashStr) {
           let sessionKey = Math.floor(Math.random() * 1000);
           sessionKeys[req.params.u] = [sessionKey, Date.now()];
-          res.cookie("login", {username: req.params.u, key: sessionKey}, {maxAge: 60000});
+          res.cookie("login", {username: req.params.u, key: sessionKey}, {maxAge: 120000});
           res.send("logged in");
         } else {
           res.send("Please Try Again");
@@ -143,9 +153,12 @@ app.get("/login/:u/:p", (req, res) => {
 
 app.post("/save/", (req, res) => {
   if (authentication != "NOT ALLOWED") {
-    let bio = JSON.parse(req.body.bio);
-    let img = JSON.parse(req.body.img);
-    let fullName = JSON.parse(req.body.fullName);
+    //let bio = JSON.parse(req.body.bio);
+    let bio = req.body.bio;
+    //let img = JSON.parse(req.body.img);
+    let img = req.body.img;
+    //let fullName = JSON.parse(req.body.fullName);
+    let fullName = req.body.fullName;
     let age = JSON.parse(req.body.age);
     let loc = JSON.parse(req.body.loc);
     let newInterests = JSON.parse(req.body.interests);
@@ -155,6 +168,11 @@ app.post("/save/", (req, res) => {
 
     ageObj.save(function (err) { if (err) console.log('could not save age'); });
     locObj.save(function (err) { if (err) console.log('could not save location'); });
+    User.find({username: req.cookies.login.username}).exec(function(error, results) {
+      results.interests.push(ageObj);
+      results.interests.push(locObj);
+      console.log(JSON.stringify(results.interests));
+    });
 
     User.find({username: req.cookies.login.username}).exec(function(error, results) {
       for(var i = 0; i < results.interests.length; i++) {
@@ -313,7 +331,7 @@ function createMatches(username) {
   var matches = new Set();
   User.find({username: username})
     .exec(function(error,results) {
-
+      if (results.interests != undefined) {
       // for each of the current user's interests...
       for (i=0;i<results.interests.length;i++) {
         // for each of the other users...
@@ -331,6 +349,8 @@ function createMatches(username) {
             }
           }
         }
+      }
+
       }
       let orderedMatches = Object.keys(matches).sort().reduce(
         (obj, key) => { 
@@ -354,20 +374,22 @@ app.get("/get/matches", (req, res) => {
     createMatches(req.cookies.login.username);
 
     let toReturn = new Set();
-    let matches = filterMatches();
-    User.find({username: matches[0]})
-    .exec(function(error,results) {
-      try {
-        toReturn['fullName'] = results.fullName;
-        toReturn['photo'] = results.photo;
-        toReturn['age'] = results.age;
-        toReturn['location'] = results.location;
-        toReturn['bio'] = results.bio;
-        toReturn['username'] = results.username;
-      } catch {
-        return (error);
-      }
-    });
+    let matches = filterMatches(req);
+    if (matches != undefined) {
+      User.find({username: matches[0]})
+      .exec(function(error,results) {
+        try {
+          toReturn['fullName'] = results.fullName;
+          toReturn['photo'] = results.photo;
+          toReturn['age'] = results.age;
+          toReturn['location'] = results.location;
+          toReturn['bio'] = results.bio;
+          toReturn['username'] = results.username;
+        } catch {
+          return (error);
+        }
+      });
+    }
   } else {
     res.send('NOT ALLOWED');
   }
@@ -391,7 +413,7 @@ app.post("/skip/match", (req, res) => {
   }
 });
 
-function filterMatches() {
+function filterMatches(req) {
   let curUser = req.cookies.login.username;
   
   User.find({username: curUser})

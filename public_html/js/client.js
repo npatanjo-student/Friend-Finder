@@ -46,12 +46,18 @@ function login() {
 
 function saveProfileEdits() {
     let interestsList = [];
-    let bio = $("editUserBio").val();
-    let img = $("editUserImage").val();
-    let fullName = $("editUserName").val();
-    let age = $("editUserAge").val();
-    let loc = $("editUserLocation").val();
-    let interests = $("editUserInterests").val();
+    //let bio = $("editUserBio").val();
+    //let img = $("editUserImage").val();
+    //let fullName = $("editUserName").val();
+    //let age = $("editUserAge").val();
+   // let loc = $("editUserLocation").val();
+//    let interests = $("editUserInterests").val();
+    let bio = document.getElementById("editUserBio").value;
+    let img = document.getElementById("editUserBio").value;
+    let fullName = document.getElementById("editUserName").value;
+    let age = document.getElementById("editUserAge").value;
+    let loc = document.getElementById("editUserLocation").value;
+    let interests = document.getElementById("editUserInterests").value;
 
     let age_int = {interest : age, weight : 2};
     let age_str = JSON.stringify(age_int);
