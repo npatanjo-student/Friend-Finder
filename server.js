@@ -441,6 +441,7 @@ app.get("/get/matches", (req, res) => {
     let toReturn = new Set();
     User.find({username: req.cookies.login.username})
     .exec(function(error,results) {
+      if (results[0].matches.length != 0) {
       User.find({username: results[0].matches[0].username})
       .exec(function(error,result) {
         try {
@@ -457,12 +458,14 @@ app.get("/get/matches", (req, res) => {
           return (error);
         }
       });
+      }
     });
   } else {
     res.send('NOT ALLOWED');
   }
 });
 
+/*
 app.post("/skip/match", (req, res) => {
   if (authentication(req, res)  != "NOT ALLOWED") {
     let user = JSON.parse(req.body.user);
@@ -478,6 +481,22 @@ app.post("/skip/match", (req, res) => {
     });
   } else {
     res.send('NOT ALLOWED');
+  }
+});
+*/
+
+app.get("/skip/match", (req, res) => {
+  if (authentication(req, res)  != "NOT ALLOWED") {
+    let curUser = req.cookies.login.username;
+    User.findOne({username: curUser}).exec(function(error, results) {
+      if (results.matches.length > 0) {
+        results.matches.shift();
+        results.save(function (err) {if (err) console.log("an error occured");});
+        console.log("Brads Matches: " + results.matches);
+      } else {
+        res.send("No more matches");
+      }
+    });
   }
 });
 
