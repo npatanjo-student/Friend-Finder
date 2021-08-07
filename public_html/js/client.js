@@ -266,28 +266,64 @@ function userMessages() {
     window.location = "/messages.html"
 }
 
-function messageMatch(username) {
-    let message = 'Start of Conversation';
-    let from = '';
-    let toSend = {toID:username, fromID : from, messages:message}
-    let toSend_str = JSON.stringify(toSend);
-
+function getUsername() {
     $.ajax ({
-        url: "/messages/" + username + "/send",
-        data: {message : toSend_str},
-        method: "POST",
+        url: "/get/username",
+        method: "GET",
         success: function (result) {
             if (result == 'NOT ALLOWED') {
                 alert('Please log in');
                 window.location = "/login.html"
             } else {
-                console.log("OK");
-                window.location = "/messages.html";
-                viewMessages(username);
+                alert("working");
+                messageMatch(username);
             }
         }
     });
 }
+
+function messageMatch(username) {
+
+    $.ajax ({
+        url: "/messages/convo/send",
+        method: "GET",
+        success: function (result) {
+            if (result == 'not allowed') {
+                alert('please log in');
+                window.location = "/login.html"
+            } else {
+                console.log("ok");
+                window.location = "/messages.html";
+                viewmessages(username);
+            }
+        }
+    });
+}
+
+/*
+function messagematch(username) {
+    let message = 'start of conversation';
+    let to = '';
+    let tosend = {toid:to, fromid : username, messages:message}
+    let tosend_str = json.stringify(tosend);
+
+    $.ajax ({
+        url: "/messages/" + username + "/send",
+        data: {message : tosend_str},
+        method: "post",
+        success: function (result) {
+            if (result == 'not allowed') {
+                alert('please log in');
+                window.location = "/login.html"
+            } else {
+                console.log("ok");
+                window.location = "/messages.html";
+                viewmessages(username);
+            }
+        }
+    });
+}
+*/
 
 function skipProfile() {
     $.ajax ({
