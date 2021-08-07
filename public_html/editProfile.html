@@ -39,7 +39,7 @@
         </div>
 
         <div id="profileLeft">
-            <a id="saveProfileButton" onclick="saveProfileEdits();">Save Profile</a>
+            <input type="submit" value="Save Profile" id="saveProfileButton" onclick="saveProfileEdits();">
             <br>
             <label for="editUserBio">Bio</label>
             <textarea class="textBox" rows="12" cols="24" id="editUserBio" value=""></textarea>
@@ -49,7 +49,9 @@
 
         <div id="profileRight">
             <label for="editUserImage">Image</label>
-            <input id="editUserImage" type="file" value="">
+            <form id="editUserImage" action="/upload" method="post" enctype="multipart/form-data">
+                <input type="file" accept="image/*" name="photo" >
+            </form>        
         </div>
         <div id="footer">
             <div id="helpButtonContainer">

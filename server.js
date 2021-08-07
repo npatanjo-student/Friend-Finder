@@ -11,7 +11,10 @@ const mongoose = require('mongoose');
 const parser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const crypto = require ("crypto");
+const multer = require('multer');
 
+
+const upload = multer({dest: __dirname + '/uploads/images'});
 const app = express();
 app.use(parser.json());
 app.use(parser.urlencoded({ extended: true }));
@@ -186,12 +189,12 @@ app.get("/login/:u/:p", (req, res) => {
   });
 });
 
-app.post("/save/", (req, res) => {
+app.post("/save/", upload.single('photo'), (req, res) => {
   if (authentication(req, res)  != "NOT ALLOWED") {
     //let bio = JSON.parse(req.body.bio);
     let bio = req.body.bio;
     //let img = JSON.parse(req.body.img);
-    let img = req.body.img;
+    let img = req.file.path;
     //let fullName = JSON.parse(req.body.fullName);
     let fullName = req.body.fullName;
     let age = JSON.parse(req.body.age);
@@ -227,6 +230,7 @@ app.post("/save/", (req, res) => {
       age == null ? results[0].age = "" : results[0].age = ageObj.interest;
       loc == null ? results[0].location = "" : results[0].location = locObj.interest;
       results[0].save(function (err) { if (err) console.log('could not save user - line 218'); });
+      console.log(results[0]);
     });
     res.send("Changes Saved");
   }
@@ -284,19 +288,6 @@ app.get("/messages/:convo", (req, res) => {
     res.send('NOT ALLOWED');
   }
 });
-
-/*
-----------------------TO NICK---------------------------
-
-The skip profile deletes [0] from matches. That being said,
-we can access who is being messaged by just fiding the 
-first index of curUser.matches.
-
-in otherwords, when the user clicks "message" they will
-always be messaging curUser.matches[0]
-
----------------------TO NICK---------------------------
-*/
 
 app.get("/messages/convo/send", (req, res) => {
   if (authentication(req, res) != "NOT ALLOWED") {

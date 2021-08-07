@@ -35,12 +35,6 @@ function login() {
 
 function saveProfileEdits() {
     let interestsList = [];
-    //let bio = $("editUserBio").val();
-    //let img = $("editUserImage").val();
-    //let fullName = $("editUserName").val();
-    //let age = $("editUserAge").val();
-   // let loc = $("editUserLocation").val();
-//    let interests = $("editUserInterests").val();
     let bio = document.getElementById("editUserBio").value;
     let img = document.getElementById("editUserImage").value;
     let fullName = document.getElementById("editUserName").value;
@@ -92,16 +86,10 @@ function showEditProfile() {
                 alert('Please log in');
                 window.location = "/login.html"
             } else {
-                console.log(result);
-                console.log(result['fullName']);
                 $('#editUserName').val(result['fullName']);
-                console.log(result['age']);
                 $('#editUserAge').val(result['age']);
-                console.log(result['location']);
                 $('#editUserLocation').val(result['location']);
-                console.log(result['bio']);
                 $('#editUserBio').val(result['bio']);
-                console.log(result['interests']);
                 $('#editUserInterests').val(result['interests']);
             }
         }
@@ -122,7 +110,7 @@ function showUserProfile() {
                 window.location = "/login.html"
             } else {
                 $('#userName').text(result['fullName']);
-                $('#userImage').text(result['photo']);
+                $('#userImageContainer').html('<img id="userImage" src="/uploads/images/'+result['photo']+'" alt="User Image">');
                 $('#userAge').text(result['age']);
                 $('#userLocation').text(result['location']);
                 $('#userBio').text(result['bio']);
@@ -141,7 +129,7 @@ function displayConvoTabs(data) {
         var photo = data[key][1];
         toReturn += '<div class="convoTabs">';
         toReturn += '<div class="image-cropper-tab"><a class="friendFullNameTab" onclick="viewMessages('+username+');">'+ fullName +'</a></div>';
-        toReturn += '<img src="img/'+photo+'" alt="User Image">';
+        toReturn += '<img src="/uploads/images/'+photo+'" alt="User Image">';
         toReturn += '</div>';
         console.log('toReturn');
         console.log(toReturn);
@@ -187,9 +175,8 @@ function displayFriend(data,username) {
     var fullName = data[0];
     var photo = data[1];
     data.splice(0,2);
-
     toReturn += '<div class="userInfo">';
-    toReturn += '<div class="image-cropper"> <img class="friendPhoto" src="img/'+photo+'" alt="User Image" onclick="viewFriendProfile('+username+');"></div>';
+    toReturn += '<div class="image-cropper"> <img class="friendPhoto" src="/uploads/images/'+photo+'" alt="User Image" onclick="viewFriendProfile('+username+');"></div>';
     toReturn += '<div class="friendFullName">'+fullName+'</div>';
     toReturn += '</div>';
     toReturn += '<div id="currentChat"></div>';
@@ -335,7 +322,7 @@ function showMatch() {
                 window.location = "/login.html"
             } else {
                 $('#matchName').text(result['fullName']);
-                $('#matchImage').text(result['photo']);
+                $('#matchImage').html('<img id="matchImage" src="uploads/images/'+result['photo']+'" alt="User Image">');
                 $('#matchAge').text(result['age']);
                 $('#matchLocation').text(result['location']);
                 $('#matchBio').text(result['bio']);
@@ -357,7 +344,7 @@ function viewFriendProfile(username) {
                 window.location = "/login.html"
             } else {
                 $('#friendName').text(result['fullName']);
-                $('#friendImage').text(result['photo']);
+                $('#friendImage').html('<img id="friendImage" src="/uploads/images/'+result['photo']+'" alt="User Image">');
                 $('#friendAge').text(result['age']);
                 $('#friendLocation').text(result['location']);
                 $('#friendBio').text(result['bio']);
