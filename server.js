@@ -34,7 +34,7 @@ var UserSchema = new Schema ({
     bio : String,
     //interests : [{type: Schema.ObjectId, ref: "Interests"}],
     interests : [],
-    messages : [{type: Schema.ObjectId, ref: "Messages"}],
+    messages : [],
     matches : [],
     skips : []
 });
@@ -235,6 +235,10 @@ app.post("/save/", (req, res) => {
   }
 });
 
+app.get("/get/username", (req, res) => {
+  res.send(req.cookies.login.username);
+});
+
 app.get("/messages/", (req, res) => {
   if (authentication(req, res)  != "NOT ALLOWED") {
     let convoDict = new Set();
@@ -278,6 +282,47 @@ app.get("/messages/:convo", (req, res) => {
     });
   } else {
     res.send('NOT ALLOWED');
+  }
+});
+
+/*
+----------------------TO NICK---------------------------
+
+The skip profile deletes [0] from matches. That being said,
+we can access who is being messaged by just fiding the 
+first index of curUser.matches.
+
+in otherwords, when the user clicks "message" they will
+always be messaging curUser.matches[0]
+
+---------------------TO NICK---------------------------
+*/
+
+app.get("/messages/convo/send", (req, res) => {
+  if (authentication(req, res) != "NOT ALLOWED") {
+    let curUser = req.cookies.login.username;
+    User.findOne({username: curUser}).exec(function(error,resultToMsg) {
+      let userId = resultToMsg._id;
+      let toId = resultToMsg.matches[0]._id;
+      let toSend = {toid: toId, fromid: userId, message: "start of conversation"};
+      var msgObj = new Messages(toSend);
+      msgObj.save(function (err) { if (err) console.log('could not save message2 '+err); });
+      console.log(resultToMsg.messages);
+      resultToMsg.messages.push(msgObj);
+      console.log(resultToMsg.messages);
+      resultToMsg.save(function (err) {if (err) console.log("an error occured");});
+
+      User.find({_id: toId})
+      .exec(function(error,results) {
+        console.log(results[0].messages);
+        results[0].messages.push(msgObj);
+        console.log(results[0].messages);
+        results[0].save(function (err) {if (err) console.log("an error occured");});
+      });
+    });
+    console.log("Message Sent");
+  } else {
+    res.send("NOT ALLOWED");
   }
 });
 
