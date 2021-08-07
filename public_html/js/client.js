@@ -106,23 +106,6 @@ function showEditProfile() {
             }
         }
     });
-    $.ajax ({
-        url: "/get/matches",
-        method: "GET",
-        success: function (result) {
-            if (result == 'NOT ALLOWED') {
-                alert('Please log in');
-                window.location = "/login.html"
-            } else {
-                $('#matchName').text(result['fullName']);
-                $('#matchImage').text(result['photo']);
-                $('#matchAge').text(result['age']);
-                $('#matchLocation').text(result['location']);
-                $('#matchBio').text(result['bio']);
-                $('#homeLeftOptions').html('<a id="messageMatchButton" onclick="messageMatch(\''+result['username']+'\');">Message</a> <a id="skipProfileButton" onclick="skipProfile(\''+result['username']+'\');">Skip Profile</a>');
-            }
-        }
-    });
 }
 
 function userProfile() {
@@ -325,18 +308,16 @@ function messagematch(username) {
 }
 */
 
-function skipProfile() {
+function skipProfile(username) {
     $.ajax ({
         url: "/skip/match",
-        method: "GET",
+        method: "POST",
+        data: {user : username},
         success: function (result) {
             if (result == 'NOT ALLOWED') {
                 alert('Please log in');
                 window.location = "/login.html"
-            } else if (result == "No more matches") {
-                alert(result);
             } else {
-                showMatch();
                 alert(result);
             }
         }
