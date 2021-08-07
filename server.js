@@ -3,7 +3,8 @@
     FILE: server.js
     ASSIGNMENT: Final Project
     COURSE: CSc 337; Summer 2021
-    PURPOSE: 
+    PURPOSE: This is a website for finding your friends. You can
+    make an account login and get matched with interesting people
 */
 
 const express = require('express');
@@ -35,7 +36,6 @@ var UserSchema = new Schema ({
     age : String,
     location : String,
     bio : String,
-    //interests : [{type: Schema.ObjectId, ref: "Interests"}],
     interests : [],
     messages : [],
     matches : [],
@@ -65,6 +65,9 @@ app.use("/", express.static('public_html'))
 mongoose.connect(mongoDBURL , { useNewUrlParser: true });
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+/*
+session update
+*/
 function updateSessions() {
   console.log('session update function');
   let now = Date.now();
@@ -77,34 +80,18 @@ function updateSessions() {
 
 setInterval(updateSessions, 2000);
 
+/*
+for get user input
+*/
 app.get("/get/users", function (req, res) {
   User.find({}).exec(function(error, results) {
     res.send(JSON.stringify(results));
   });
 });
 
-// function authentication(req, res, next) {
-//   try {
-//     if (Object.keys(req.cookies).length > 0) {
-//       console.log(req.cookies.login.username);
-//       let u = req.cookies.login.username;
-//       let key = req.cookies.login.key;
-//       if (sessionKeys[u] == undefined) {
-//         console.log(sessionKeys);
-//       }
-//       if ( Object.keys(sessionKeys[u]).length > 0 && sessionKeys[u][0] == key) {
-//         next();
-//       } else {
-//         return('NOT ALLOWED');
-//       }
-//     } else {
-//       res.send('NOT ALLOWED');
-//     }
-//   } catch {
-//     res.send('NOT ALLOWED');
-//   }
-// }
-
+/*
+Authentication
+*/
 function authentication(req, res) {
   if (Object.keys(req.cookies).length > 0) {
     console.log(req.cookies.login.username);
@@ -124,6 +111,9 @@ function authentication(req, res) {
   }
 }
 
+/*
+where users are added
+*/
 app.get("/add/user/:u/:p/:n", (req, res) => {
   User.find ({username: req.params.u}).exec(function(error, results) {
     if (results.length == 0) {
@@ -146,6 +136,8 @@ app.get("/add/user/:u/:p/:n", (req, res) => {
   });
 });
 
+/*
+*/
 function getUsers() {
   var intSet = new Set();
   User.find({})
@@ -166,6 +158,9 @@ function getUsers() {
   });  
 }
 
+/*
+where users login
+*/
 app.get("/login/:u/:p", (req, res) => {
   User.find({username: req.params.u}).exec(function(error, results) {
     if (results.length == 1) {
@@ -189,6 +184,9 @@ app.get("/login/:u/:p", (req, res) => {
   });
 });
 
+/*
+where user info is saved 
+*/
 app.post("/save/", upload.single('photo'), (req, res) => {
   if (authentication(req, res)  != "NOT ALLOWED") {
     //let bio = JSON.parse(req.body.bio);
@@ -239,10 +237,15 @@ app.post("/save/", upload.single('photo'), (req, res) => {
   }
 });
 
+/*
+*/
 app.get("/get/username", (req, res) => {
   res.send(req.cookies.login.username);
 });
 
+/*
+Where messages are sent
+*/
 app.get("/messages/", (req, res) => {
   if (authentication(req, res)  != "NOT ALLOWED") {
     let convoDict = new Set();
@@ -263,6 +266,9 @@ app.get("/messages/", (req, res) => {
   }
 });
 
+/*
+where the conversations are saved
+*/
 app.get("/messages/:convo", (req, res) => {
   if (authentication(req, res)  != "NOT ALLOWED") {
     let messageList = [];
@@ -289,6 +295,10 @@ app.get("/messages/:convo", (req, res) => {
   }
 });
 
+/*
+where the current users id is linked to the 
+user to message
+*/
 app.get("/messages/convo/send", (req, res) => {
   if (authentication(req, res) != "NOT ALLOWED") {
     let curUser = req.cookies.login.username;
@@ -317,6 +327,9 @@ app.get("/messages/convo/send", (req, res) => {
   }
 });
 
+/*
+
+*/
 app.post("/messages/:convo/send", (req, res) => {
   if (authentication(req, res)  != "NOT ALLOWED") {
     let curUser = req.cookies.login.username;
@@ -349,6 +362,9 @@ app.post("/messages/:convo/send", (req, res) => {
   }
 });
 
+/*
+returns the current users profile
+*/
 app.get("/profile", (req, res) => {
   if (authentication(req, res)  != "NOT ALLOWED") {
     let curUser = req.cookies.login.username;
@@ -382,6 +398,10 @@ app.get("/profile", (req, res) => {
   }
 });
 
+/*
+creates the matches and adds them as objects
+into the User object
+*/
 function createMatches(username) {
   var matches = new Set();
   User.find({}).exec(function(error, resultsUsers) {
@@ -404,73 +424,7 @@ function createMatches(username) {
 }
 
 /*
-function createMatches(username) {
-  var users = new Set();
-  User.find({})
-  .exec(function(error, results) {
-    for (userObj in results) {
-      var intList = [];
-      for (interestObj in results[userObj].interests) {
-        intList.push(results[userObj].interests[interestObj].interest);
-      }
-      users[results[userObj].username] = intList;
-    }
-    console.log(users);
-  });
-  var matches = new Set();
-  User.findOne({username: username})
-    .exec(function(error,results) {
-      console.log("USER AT 0: " + users[0]);
-      //if (results[0].interests != undefined) {
-        // for each of the current user's interests...
-        for (i=0;i<results.interests.length;i++) {
-              console.log("CURRENT USER INTEREST: " + results.interests[i].interest);
-          // for each of the other users...
-          for (j=0;j<users.length;j++) {
-            // for each of the other user's interests...
-            for (k=0;k<users[j].interests.length;k++) {
-              // if they share an interest...
-              console.log("OTHER USER INTERSTS: " + users[j].interests[k].interests);
-              if (users[j].interests[k].interest == results.interests[i].interest) {
-                // if the other user is in the set already...
-                console.log("MADE IT IN IF STATEMENT");
-                matches.add(users[j]);
-                if (users[j].username in matches) {
-                  matches[users[j].username] += results.interests[i].weight;
-                  
-                } else {
-                  matches[users[j].username] = results.interests[i].weight;
-                }
-              }
-            }
-            console.log(matches);
-          }
-        }
-      //}
-      console.log('matches');
-      console.log(matches);
-      if (matches.length > 0) {
-        let orderedMatches = Object.keys(matches).sort().reduce(
-          (obj, key) => { 
-            obj[key] = matches[key]; 
-            console.log('obj');
-            console.log(obj);
-            return obj;
-          } 
-        );
-        console.log('orderedMatches');
-        console.log(orderedMatches);
-        let matchesList =[];
-        for (key in orderedMatches) {
-          matchesList.push(key)
-        }
-        console.log('matchesList');
-        console.log(matchesList);
-        results.matches = matchesList;
-        results.save(function (err) {if (err) console.log("an error occured");});
-      }
-    });
-}
+a getter method for the matches
 */
 app.get("/get/matches", (req, res) => {
   if (authentication(req, res)  != "NOT ALLOWED") {  
@@ -502,25 +456,8 @@ app.get("/get/matches", (req, res) => {
 });
 
 /*
-app.post("/skip/match", (req, res) => {
-  if (authentication(req, res)  != "NOT ALLOWED") {
-    let user = JSON.parse(req.body.user);
-    let curUser = req.cookies.login.username;
-  
-    User.find({username: curUser})
-    .exec(function(error,results) {
-      try {
-        results[0].skips.push(user);
-      } catch {
-        return (error);
-      }
-    });
-  } else {
-    res.send('NOT ALLOWED');
-  }
-});
+skips when skipped
 */
-
 app.get("/skip/match", (req, res) => {
   if (authentication(req, res)  != "NOT ALLOWED") {
     let curUser = req.cookies.login.username;
@@ -536,6 +473,9 @@ app.get("/skip/match", (req, res) => {
   }
 });
 
+/*
+filters the matches for the account
+*/
 function filterMatches(req) {
   console.log('filter');
   let curUser = req.cookies.login.username;
@@ -559,6 +499,9 @@ function filterMatches(req) {
   });
 }
 
+/*
+gets your friends profile and returns to client
+*/
 app.get("/profile/:friend", (req, res) => {
   if (authentication(req, res)  != "NOT ALLOWED") {
     let friend = req.params.friend;
@@ -581,6 +524,9 @@ app.get("/profile/:friend", (req, res) => {
   }
 });
 
+/*
+Deletes a friend
+*/
 app.get("/delete/:friend", (req, res) => {
   if (authentication(req, res)  != "NOT ALLOWED") {
     let curUser = req.cookies.login.username;
@@ -605,6 +551,9 @@ app.get("/delete/:friend", (req, res) => {
   }
 });
 
+/*
+Listen for server
+*/
 app.listen(3000, () => {
     console.log('server has started');
 });
